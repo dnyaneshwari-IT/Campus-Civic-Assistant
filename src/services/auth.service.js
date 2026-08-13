@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const pool = require("../config/database");
 const ROLES = require("../utils/roles");
+const { generateToken } = require("../utils/jwt");
 
 async function registerUser({ name, email, password }) {
 
@@ -42,7 +43,58 @@ async function registerUser({ name, email, password }) {
         role: ROLES.STUDENT
     };
 }
+async function loginUser({ email, password }) {
+
+    if (!email || !password) {
+        throw new Error("Email and password are required");
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const [users] = await pool.execute(
+        `SELECT id, name, email, password_hash, role, is_active
+         FROM users
+         WHERE email = ?
+         LIMIT 1`,
+        [normalizedEmail]
+    );
+
+    if (users.length === 0) {
+        throw new Error("Invalid email or password");
+    }
+
+    const user = users[0];
+
+    if (!user.is_active) {
+        throw new Error("Account is inactive");
+    }
+
+    const passwordMatches = await bcrypt.compare(
+        password,
+        user.password_hash
+    );
+
+    if (!passwordMatches) {
+        throw new Error("Invalid email or password");
+    }
+
+    const token = generateToken({
+        userId: user.id,
+        role: user.role
+    });
+
+    return {
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+        },
+        token
+    };
+}
 
 module.exports = {
-    registerUser
+    registerUser,
+    loginUser
 };

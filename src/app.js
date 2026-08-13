@@ -2,6 +2,7 @@ const express = require("express");
 const authRoutes = require("./routes/auth.routes");
 const categoryRoutes = require("./routes/category.routes");
 const departmentRoutes = require("./routes/department.routes");
+const issueRoutes = require("./routes/issue.routes");
 
 const app = express();
 
@@ -23,5 +24,8 @@ app.use("/api/v1/categories", categoryRoutes);
 
 // Department routes
 app.use("/api/v1/departments", departmentRoutes);
+
+// Issue routes
+app.use("/api/v1/issues", issueRoutes);
 
 module.exports = app;

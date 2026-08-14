@@ -28,6 +28,14 @@ router.get(
     issueController.getAuthorityIssues
 );
 
+// Authority: Assign Issue
+router.patch(
+    "/:id/assign",
+    authenticate,
+    authorizeRoles(ROLES.AUTHORITY),
+    issueController.assignIssue
+);
+
 // Student: Get My Issue By ID
 router.get(
     "/:id",

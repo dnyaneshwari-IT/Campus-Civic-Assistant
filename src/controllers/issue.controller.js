@@ -15,7 +15,8 @@ async function createIssue(req, res) {
         if (!title || !description || !categoryId || !departmentId) {
             return res.status(400).json({
                 success: false,
-                message: "Title, description, categoryId and departmentId are required"
+                message:
+                    "Title, description, categoryId and departmentId are required"
             });
         }
 
@@ -45,6 +46,28 @@ async function createIssue(req, res) {
     }
 }
 
+async function getMyIssues(req, res) {
+    try {
+        const userId = req.user.userId;
+
+        const issues = await issueService.getIssuesByUser(userId);
+
+        return res.status(200).json({
+            success: true,
+            message: "Issues retrieved successfully",
+            data: issues
+        });
+    } catch (error) {
+        console.error("Get issues error:", error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to retrieve issues"
+        });
+    }
+}
+
 module.exports = {
-    createIssue
+    createIssue,
+    getMyIssues
 };

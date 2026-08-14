@@ -10,4 +10,10 @@ router.post(
     issueController.createIssue
 );
 
+router.get(
+    "/",
+    authenticate,
+    issueController.getMyIssues
+);
+
 module.exports = router;

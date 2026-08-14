@@ -36,6 +36,14 @@ router.patch(
     issueController.assignIssue
 );
 
+// Authority: Update Issue Status
+router.patch(
+    "/:id/status",
+    authenticate,
+    authorizeRoles(ROLES.AUTHORITY),
+    issueController.updateIssueStatus
+);
+
 // Student: Get My Issue By ID
 router.get(
     "/:id",

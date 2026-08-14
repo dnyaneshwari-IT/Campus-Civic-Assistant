@@ -212,10 +212,100 @@ async function assignIssue(issueId, authorityId, departmentId) {
     return updatedIssues[0];
 }
 
+async function updateIssueStatus(
+    issueId,
+    newStatus,
+    departmentId
+) {
+    const [issues] = await pool.execute(
+        `SELECT
+            id,
+            department_id,
+            status
+         FROM issues
+         WHERE id = ?
+         LIMIT 1`,
+        [issueId]
+    );
+
+    if (issues.length === 0) {
+        throw new Error("ISSUE_NOT_FOUND");
+    }
+
+    const issue = issues[0];
+
+    if (
+        Number(issue.department_id) !==
+        Number(departmentId)
+    ) {
+        throw new Error("DEPARTMENT_ACCESS_DENIED");
+    }
+
+    const allowedTransitions = {
+        SUBMITTED: ["ASSIGNED"],
+        ASSIGNED: ["IN_PROGRESS"],
+        IN_PROGRESS: ["RESOLVED"],
+        RESOLVED: []
+    };
+
+    const allowedNextStatuses =
+        allowedTransitions[issue.status];
+
+    if (
+        !allowedNextStatuses ||
+        !allowedNextStatuses.includes(newStatus)
+    ) {
+        throw new Error("INVALID_STATUS_TRANSITION");
+    }
+
+    const [result] = await pool.execute(
+        `UPDATE issues
+         SET status = ?,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE id = ?`,
+        [newStatus, issueId]
+    );
+
+    if (result.affectedRows === 0) {
+        throw new Error("STATUS_UPDATE_FAILED");
+    }
+
+    const [updatedIssues] = await pool.execute(
+        `SELECT
+            i.id,
+            i.title,
+            i.description,
+            i.reported_by,
+            i.category_id,
+            c.name AS category_name,
+            i.department_id,
+            d.name AS department_name,
+            i.assigned_to,
+            i.status,
+            i.priority,
+            i.location_text,
+            i.latitude,
+            i.longitude,
+            i.created_at,
+            i.updated_at
+         FROM issues i
+         INNER JOIN categories c
+             ON i.category_id = c.id
+         INNER JOIN departments d
+             ON i.department_id = d.id
+         WHERE i.id = ?
+         LIMIT 1`,
+        [issueId]
+    );
+
+    return updatedIssues[0];
+}
+
 module.exports = {
     createIssue,
     getIssuesByUser,
     getIssueById,
     getIssuesForAuthority,
-    assignIssue
+    assignIssue,
+    updateIssueStatus
 };

@@ -195,10 +195,87 @@ async function assignIssue(req, res) {
     }
 }
 
+async function updateIssueStatus(req, res) {
+    try {
+        const issueId = Number(req.params.id);
+        const { status } = req.body;
+        const departmentId = req.user.departmentId;
+
+        if (!Number.isInteger(issueId) || issueId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid issue ID"
+            });
+        }
+
+        if (!status) {
+            return res.status(400).json({
+                success: false,
+                message: "Status is required"
+            });
+        }
+
+        if (!departmentId) {
+            return res.status(403).json({
+                success: false,
+                message: "Authority department is not assigned"
+            });
+        }
+
+        const newStatus = status.trim().toUpperCase();
+
+        const issue = await issueService.updateIssueStatus(
+            issueId,
+            newStatus,
+            departmentId
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Issue status updated successfully",
+            data: issue
+        });
+    } catch (error) {
+        console.error(
+            "Update issue status error:",
+            error.message
+        );
+
+        if (error.message === "ISSUE_NOT_FOUND") {
+            return res.status(404).json({
+                success: false,
+                message: "Issue not found"
+            });
+        }
+
+        if (error.message === "DEPARTMENT_ACCESS_DENIED") {
+            return res.status(403).json({
+                success: false,
+                message:
+                    "You cannot update an issue from another department"
+            });
+        }
+
+        if (error.message === "INVALID_STATUS_TRANSITION") {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Invalid status transition"
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update issue status"
+        });
+    }
+}
+
 module.exports = {
     createIssue,
     getMyIssues,
     getIssueById,
     getAuthorityIssues,
-    assignIssue
+    assignIssue,
+    updateIssueStatus
 };

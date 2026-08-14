@@ -1,9 +1,6 @@
-const ROLES = require("../utils/roles");
-
-function authorize(...allowedRoles) {
+function authorizeRoles(...allowedRoles) {
     return (req, res, next) => {
-
-        if (!req.user) {
+        if (!req.user || !req.user.role) {
             return res.status(401).json({
                 success: false,
                 message: "Authentication required"
@@ -22,5 +19,5 @@ function authorize(...allowedRoles) {
 }
 
 module.exports = {
-    authorize
+    authorizeRoles
 };

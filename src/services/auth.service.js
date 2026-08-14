@@ -1,86 +1,73 @@
-const bcrypt = require("bcrypt");
 const pool = require("../config/database");
-const ROLES = require("../utils/roles");
+const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/jwt");
 
 async function registerUser({ name, email, password }) {
-
-    if (!name || !email || !password) {
-        throw new Error("Name, email and password are required");
-    }
-
-    if (password.length < 8) {
-        throw new Error("Password must be at least 8 characters");
-    }
-
-    const normalizedEmail = email.trim().toLowerCase();
-
-    if (!normalizedEmail.includes("@")) {
-        throw new Error("Invalid email address");
-    }
-
     const [existingUsers] = await pool.execute(
-        "SELECT id FROM users WHERE email = ? LIMIT 1",
-        [normalizedEmail]
+        "SELECT id FROM users WHERE email = ?",
+        [email]
     );
 
     if (existingUsers.length > 0) {
-        throw new Error("Email is already registered");
+        throw new Error("EMAIL_EXISTS");
     }
 
-    const passwordHash = await bcrypt.hash(password, 12);
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const [result] = await pool.execute(
-        `INSERT INTO users (name, email, password_hash, role)
-         VALUES (?, ?, ?, ?)`,
-        [name.trim(), normalizedEmail, passwordHash, ROLES.STUDENT]
+        `INSERT INTO users
+        (name, email, password_hash, role)
+        VALUES (?, ?, ?, 'STUDENT')`,
+        [name, email, passwordHash]
     );
 
     return {
         id: result.insertId,
-        name: name.trim(),
-        email: normalizedEmail,
-        role: ROLES.STUDENT
+        name,
+        email,
+        role: "STUDENT"
     };
 }
+
 async function loginUser({ email, password }) {
-
-    if (!email || !password) {
-        throw new Error("Email and password are required");
-    }
-
-    const normalizedEmail = email.trim().toLowerCase();
-
     const [users] = await pool.execute(
-        `SELECT id, name, email, password_hash, role, is_active
+        `SELECT
+            id,
+            name,
+            email,
+            password_hash,
+            role,
+            department_id,
+            is_active
          FROM users
          WHERE email = ?
          LIMIT 1`,
-        [normalizedEmail]
+        [email]
     );
 
     if (users.length === 0) {
-        throw new Error("Invalid email or password");
+        throw new Error("INVALID_CREDENTIALS");
     }
 
     const user = users[0];
 
     if (!user.is_active) {
-        throw new Error("Account is inactive");
+        throw new Error("ACCOUNT_INACTIVE");
     }
 
-    const passwordMatches = await bcrypt.compare(
+    const passwordMatch = await bcrypt.compare(
         password,
         user.password_hash
     );
 
-    if (!passwordMatches) {
-        throw new Error("Invalid email or password");
+    if (!passwordMatch) {
+        throw new Error("INVALID_CREDENTIALS");
     }
 
     const token = generateToken({
-        userId: user.id,
-        role: user.role
+        id: user.id,
+        role: user.role,
+        departmentId: user.department_id
     });
 
     return {
@@ -88,7 +75,8 @@ async function loginUser({ email, password }) {
             id: user.id,
             name: user.name,
             email: user.email,
-            role: user.role
+            role: user.role,
+            departmentId: user.department_id
         },
         token
     };

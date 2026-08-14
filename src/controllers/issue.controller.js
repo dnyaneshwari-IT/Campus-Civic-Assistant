@@ -106,8 +106,42 @@ async function getIssueById(req, res) {
     }
 }
 
+async function getAuthorityIssues(req, res) {
+    try {
+        const departmentId = req.user.departmentId;
+
+        if (!departmentId) {
+            return res.status(403).json({
+                success: false,
+                message: "Authority department is not assigned"
+            });
+        }
+
+        const issues = await issueService.getIssuesForAuthority(
+            departmentId
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Department issues retrieved successfully",
+            data: issues
+        });
+    } catch (error) {
+        console.error(
+            "Get authority issues error:",
+            error.message
+        );
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to retrieve department issues"
+        });
+    }
+}
+
 module.exports = {
     createIssue,
     getMyIssues,
-    getIssueById
+    getIssueById,
+    getAuthorityIssues
 };

@@ -16,4 +16,10 @@ router.get(
     issueController.getMyIssues
 );
 
+router.get(
+    "/:id",
+    authenticate,
+    issueController.getIssueById
+);
+
 module.exports = router;

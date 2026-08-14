@@ -67,7 +67,47 @@ async function getMyIssues(req, res) {
     }
 }
 
+async function getIssueById(req, res) {
+    try {
+        const issueId = Number(req.params.id);
+        const userId = req.user.userId;
+
+        if (!Number.isInteger(issueId) || issueId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid issue ID"
+            });
+        }
+
+        const issue = await issueService.getIssueById(
+            issueId,
+            userId
+        );
+
+        if (!issue) {
+            return res.status(404).json({
+                success: false,
+                message: "Issue not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Issue retrieved successfully",
+            data: issue
+        });
+    } catch (error) {
+        console.error("Get issue by ID error:", error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to retrieve issue"
+        });
+    }
+}
+
 module.exports = {
     createIssue,
-    getMyIssues
+    getMyIssues,
+    getIssueById
 };

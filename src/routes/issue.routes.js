@@ -44,6 +44,14 @@ router.patch(
     issueController.updateIssueStatus
 );
 
+// Authority: Update Issue Priority
+router.patch(
+    "/:id/priority",
+    authenticate,
+    authorizeRoles(ROLES.AUTHORITY),
+    issueController.updateIssuePriority
+);
+
 // Student: Get My Issue By ID
 router.get(
     "/:id",

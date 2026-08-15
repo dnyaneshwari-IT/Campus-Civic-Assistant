@@ -139,6 +139,28 @@ async function getAuthorityIssues(req, res) {
     }
 }
 
+async function getAdminIssues(req, res) {
+    try {
+        const issues = await issueService.getAllIssuesForAdmin();
+
+        return res.status(200).json({
+            success: true,
+            message: "All issues retrieved successfully",
+            data: issues
+        });
+    } catch (error) {
+        console.error(
+            "Get admin issues error:",
+            error.message
+        );
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to retrieve all issues"
+        });
+    }
+}
+
 async function assignIssue(req, res) {
     try {
         const issueId = Number(req.params.id);
@@ -259,8 +281,7 @@ async function updateIssueStatus(req, res) {
         if (error.message === "INVALID_STATUS_TRANSITION") {
             return res.status(400).json({
                 success: false,
-                message:
-                    "Invalid status transition"
+                message: "Invalid status transition"
             });
         }
 
@@ -491,6 +512,7 @@ module.exports = {
     getMyIssues,
     getIssueById,
     getAuthorityIssues,
+    getAdminIssues,
     assignIssue,
     updateIssueStatus,
     updateIssuePriority,

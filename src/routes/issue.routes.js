@@ -20,11 +20,20 @@ router.get(
     issueController.getMyIssues
 );
 
-// Authority/Admin: Get Department Issues
+// Admin: Get All Issues
+// IMPORTANT: This must come BEFORE "/:id"
+router.get(
+    "/admin",
+    authenticate,
+    authorizeRoles(ROLES.ADMIN),
+    issueController.getAdminIssues
+);
+
+// Authority: Get Department Issues
 router.get(
     "/authority",
     authenticate,
-    authorizeRoles(ROLES.AUTHORITY, ROLES.ADMIN),
+    authorizeRoles(ROLES.AUTHORITY),
     issueController.getAuthorityIssues
 );
 
@@ -69,6 +78,7 @@ router.get(
 );
 
 // Student: Get My Issue By ID
+// IMPORTANT: Keep this route AFTER /admin and /authority
 router.get(
     "/:id",
     authenticate,

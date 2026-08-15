@@ -383,6 +383,126 @@ async function updateIssuePriority(
     return updatedIssues[0];
 }
 
+async function addIssueUpdate(
+    issueId,
+    updatedBy,
+    departmentId,
+    message
+) {
+    const [issues] = await pool.execute(
+        `SELECT
+            id,
+            department_id
+         FROM issues
+         WHERE id = ?
+         LIMIT 1`,
+        [issueId]
+    );
+
+    if (issues.length === 0) {
+        throw new Error("ISSUE_NOT_FOUND");
+    }
+
+    const issue = issues[0];
+
+    if (
+        Number(issue.department_id) !==
+        Number(departmentId)
+    ) {
+        throw new Error("DEPARTMENT_ACCESS_DENIED");
+    }
+
+    const [result] = await pool.execute(
+        `INSERT INTO issue_updates
+        (
+            issue_id,
+            updated_by,
+            message
+        )
+        VALUES (?, ?, ?)`,
+        [
+            issueId,
+            updatedBy,
+            message
+        ]
+    );
+
+    const [updates] = await pool.execute(
+        `SELECT
+            iu.id,
+            iu.issue_id,
+            iu.updated_by,
+            u.name AS updated_by_name,
+            iu.message,
+            iu.created_at
+         FROM issue_updates iu
+         INNER JOIN users u
+             ON iu.updated_by = u.id
+         WHERE iu.id = ?
+         LIMIT 1`,
+        [result.insertId]
+    );
+
+    return updates[0];
+}
+
+async function getIssueUpdates(
+    issueId,
+    userId,
+    userRole,
+    departmentId
+) {
+    const [issues] = await pool.execute(
+        `SELECT
+            id,
+            reported_by,
+            department_id
+         FROM issues
+         WHERE id = ?
+         LIMIT 1`,
+        [issueId]
+    );
+
+    if (issues.length === 0) {
+        throw new Error("ISSUE_NOT_FOUND");
+    }
+
+    const issue = issues[0];
+
+    if (userRole === "STUDENT") {
+        if (Number(issue.reported_by) !== Number(userId)) {
+            throw new Error("ACCESS_DENIED");
+        }
+    }
+
+    if (userRole === "AUTHORITY") {
+        if (
+            Number(issue.department_id) !==
+            Number(departmentId)
+        ) {
+            throw new Error("DEPARTMENT_ACCESS_DENIED");
+        }
+    }
+
+    const [updates] = await pool.execute(
+        `SELECT
+            iu.id,
+            iu.issue_id,
+            iu.updated_by,
+            u.name AS updated_by_name,
+            iu.message,
+            iu.created_at
+         FROM issue_updates iu
+         INNER JOIN users u
+             ON iu.updated_by = u.id
+         WHERE iu.issue_id = ?
+         ORDER BY iu.created_at ASC`,
+        [issueId]
+    );
+
+    return updates;
+}
+
 module.exports = {
     createIssue,
     getIssuesByUser,
@@ -390,5 +510,7 @@ module.exports = {
     getIssuesForAuthority,
     assignIssue,
     updateIssueStatus,
-    updateIssuePriority
+    updateIssuePriority,
+    addIssueUpdate,
+    getIssueUpdates
 };

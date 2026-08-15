@@ -347,6 +347,145 @@ async function updateIssuePriority(req, res) {
     }
 }
 
+async function addIssueUpdate(req, res) {
+    try {
+        const issueId = Number(req.params.id);
+        const { message } = req.body;
+
+        const updatedBy = req.user.userId;
+        const departmentId = req.user.departmentId;
+
+        if (!Number.isInteger(issueId) || issueId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid issue ID"
+            });
+        }
+
+        if (!message || !message.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Update message is required"
+            });
+        }
+
+        if (message.trim().length > 500) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Update message cannot exceed 500 characters"
+            });
+        }
+
+        if (!departmentId) {
+            return res.status(403).json({
+                success: false,
+                message: "Authority department is not assigned"
+            });
+        }
+
+        const update = await issueService.addIssueUpdate(
+            issueId,
+            updatedBy,
+            departmentId,
+            message.trim()
+        );
+
+        return res.status(201).json({
+            success: true,
+            message: "Issue update added successfully",
+            data: update
+        });
+    } catch (error) {
+        console.error(
+            "Add issue update error:",
+            error.message
+        );
+
+        if (error.message === "ISSUE_NOT_FOUND") {
+            return res.status(404).json({
+                success: false,
+                message: "Issue not found"
+            });
+        }
+
+        if (error.message === "DEPARTMENT_ACCESS_DENIED") {
+            return res.status(403).json({
+                success: false,
+                message:
+                    "You cannot add an update to an issue from another department"
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to add issue update"
+        });
+    }
+}
+
+async function getIssueUpdates(req, res) {
+    try {
+        const issueId = Number(req.params.id);
+        const userId = req.user.userId;
+        const userRole = req.user.role;
+        const departmentId = req.user.departmentId;
+
+        if (!Number.isInteger(issueId) || issueId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid issue ID"
+            });
+        }
+
+        const updates = await issueService.getIssueUpdates(
+            issueId,
+            userId,
+            userRole,
+            departmentId
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Issue updates retrieved successfully",
+            data: updates
+        });
+    } catch (error) {
+        console.error(
+            "Get issue updates error:",
+            error.message
+        );
+
+        if (error.message === "ISSUE_NOT_FOUND") {
+            return res.status(404).json({
+                success: false,
+                message: "Issue not found"
+            });
+        }
+
+        if (error.message === "ACCESS_DENIED") {
+            return res.status(403).json({
+                success: false,
+                message:
+                    "You can only view updates for your own issues"
+            });
+        }
+
+        if (error.message === "DEPARTMENT_ACCESS_DENIED") {
+            return res.status(403).json({
+                success: false,
+                message:
+                    "You cannot view updates for another department"
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to retrieve issue updates"
+        });
+    }
+}
+
 module.exports = {
     createIssue,
     getMyIssues,
@@ -354,5 +493,7 @@ module.exports = {
     getAuthorityIssues,
     assignIssue,
     updateIssueStatus,
-    updateIssuePriority
+    updateIssuePriority,
+    addIssueUpdate,
+    getIssueUpdates
 };

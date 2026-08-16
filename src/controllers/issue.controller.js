@@ -141,16 +141,22 @@ async function getAuthorityIssues(req, res) {
 
 async function getAdminIssues(req, res) {
     try {
-        const { status } = req.query;
+        const { status, priority } = req.query;
 
         let issueStatus;
+        let issuePriority;
 
         if (status) {
             issueStatus = status.trim().toUpperCase();
         }
 
+        if (priority) {
+            issuePriority = priority.trim().toUpperCase();
+        }
+
         const issues = await issueService.getAllIssuesForAdmin(
-            issueStatus
+            issueStatus,
+            issuePriority
         );
 
         return res.status(200).json({

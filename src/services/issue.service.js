@@ -150,9 +150,9 @@ async function getIssuesForAuthority(departmentId) {
 }
 
 /*
- * Admin: Get all issues from all departments
+ * Admin: Get all issues with optional filters
  */
-async function getAllIssuesForAdmin(status) {
+async function getAllIssuesForAdmin(status, priority) {
     let query = `
         SELECT
             i.id,
@@ -184,11 +184,21 @@ async function getAllIssuesForAdmin(status) {
             ON i.assigned_to = authority.id
     `;
 
+    const conditions = [];
     const params = [];
 
     if (status) {
-        query += ` WHERE i.status = ?`;
+        conditions.push(`i.status = ?`);
         params.push(status);
+    }
+
+    if (priority) {
+        conditions.push(`i.priority = ?`);
+        params.push(priority);
+    }
+
+    if (conditions.length > 0) {
+        query += ` WHERE ${conditions.join(" AND ")}`;
     }
 
     query += ` ORDER BY i.created_at DESC`;

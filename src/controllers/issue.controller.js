@@ -141,7 +141,17 @@ async function getAuthorityIssues(req, res) {
 
 async function getAdminIssues(req, res) {
     try {
-        const issues = await issueService.getAllIssuesForAdmin();
+        const { status } = req.query;
+
+        let issueStatus;
+
+        if (status) {
+            issueStatus = status.trim().toUpperCase();
+        }
+
+        const issues = await issueService.getAllIssuesForAdmin(
+            issueStatus
+        );
 
         return res.status(200).json({
             success: true,

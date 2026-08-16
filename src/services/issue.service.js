@@ -152,9 +152,9 @@ async function getIssuesForAuthority(departmentId) {
 /*
  * Admin: Get all issues from all departments
  */
-async function getAllIssuesForAdmin() {
-    const [issues] = await pool.execute(
-        `SELECT
+async function getAllIssuesForAdmin(status) {
+    let query = `
+        SELECT
             i.id,
             i.title,
             i.description,
@@ -173,16 +173,29 @@ async function getAllIssuesForAdmin() {
             i.longitude,
             i.created_at,
             i.updated_at
-         FROM issues i
-         INNER JOIN categories c
-             ON i.category_id = c.id
-         INNER JOIN departments d
-             ON i.department_id = d.id
-         INNER JOIN users reporter
-             ON i.reported_by = reporter.id
-         LEFT JOIN users authority
-             ON i.assigned_to = authority.id
-         ORDER BY i.created_at DESC`
+        FROM issues i
+        INNER JOIN categories c
+            ON i.category_id = c.id
+        INNER JOIN departments d
+            ON i.department_id = d.id
+        INNER JOIN users reporter
+            ON i.reported_by = reporter.id
+        LEFT JOIN users authority
+            ON i.assigned_to = authority.id
+    `;
+
+    const params = [];
+
+    if (status) {
+        query += ` WHERE i.status = ?`;
+        params.push(status);
+    }
+
+    query += ` ORDER BY i.created_at DESC`;
+
+    const [issues] = await pool.execute(
+        query,
+        params
     );
 
     return issues;

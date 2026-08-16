@@ -13,17 +13,10 @@ router.post(
     issueController.createIssue
 );
 
-// Student: Get My Issues
-router.get(
-    "/",
-    authenticate,
-    issueController.getMyIssues
-);
-
 // Admin: Get All Issues
-// IMPORTANT: This must come BEFORE "/:id"
+// Keep this BEFORE "/:id"
 router.get(
-    "/admin",
+    "/admin/all",
     authenticate,
     authorizeRoles(ROLES.ADMIN),
     issueController.getAdminIssues
@@ -35,6 +28,13 @@ router.get(
     authenticate,
     authorizeRoles(ROLES.AUTHORITY),
     issueController.getAuthorityIssues
+);
+
+// Student: Get My Issues
+router.get(
+    "/",
+    authenticate,
+    issueController.getMyIssues
 );
 
 // Authority: Assign Issue
@@ -78,7 +78,7 @@ router.get(
 );
 
 // Student: Get My Issue By ID
-// IMPORTANT: Keep this route AFTER /admin and /authority
+// Keep this AFTER /admin/all and /authority
 router.get(
     "/:id",
     authenticate,

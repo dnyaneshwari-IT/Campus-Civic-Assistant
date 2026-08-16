@@ -14,4 +14,12 @@ router.get(
     adminController.getAllUsers
 );
 
+// Admin: Activate / Deactivate user
+router.patch(
+    "/users/:id/status",
+    authenticate,
+    authorizeRoles(ROLES.ADMIN),
+    adminController.updateUserStatus
+);
+
 module.exports = router;

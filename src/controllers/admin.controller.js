@@ -131,8 +131,68 @@ async function updateAuthorityDepartment(req, res) {
     }
 }
 
+async function updateUserRole(req, res) {
+    try {
+        const userId = Number(req.params.id);
+        const { role } = req.body;
+
+        if (!Number.isInteger(userId) || userId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid user ID"
+            });
+        }
+
+        if (!role || typeof role !== "string") {
+            return res.status(400).json({
+                success: false,
+                message: "Role is required"
+            });
+        }
+
+        const newRole = role.trim().toUpperCase();
+
+        const user = await adminService.updateUserRole(
+            userId,
+            newRole
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "User role updated successfully",
+            data: user
+        });
+    } catch (error) {
+        console.error(
+            "Update user role error:",
+            error.message
+        );
+
+        if (error.message === "USER_NOT_FOUND") {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        if (error.message === "INVALID_ROLE") {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Invalid role. Allowed values: STUDENT, AUTHORITY, ADMIN"
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update user role"
+        });
+    }
+}
+
 module.exports = {
     getAllUsers,
     updateUserStatus,
-    updateAuthorityDepartment
+    updateAuthorityDepartment,
+    updateUserRole
 };

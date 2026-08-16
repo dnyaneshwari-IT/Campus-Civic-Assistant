@@ -5,6 +5,7 @@ const departmentRoutes = require("./routes/department.routes");
 const issueRoutes = require("./routes/issue.routes");
 const adminRoutes = require("./routes/admin.routes");
 
+
 const app = express();
 
 app.use(express.json());
@@ -31,5 +32,6 @@ app.use("/api/v1/issues", issueRoutes);
 
 // Admin routes
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/admin", adminRoutes);
 
 module.exports = app;

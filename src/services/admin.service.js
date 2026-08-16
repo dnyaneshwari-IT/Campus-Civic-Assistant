@@ -106,8 +106,60 @@ async function updateAuthorityDepartment(userId, departmentId) {
     return updatedUsers[0];
 }
 
+async function updateUserRole(userId, role) {
+    const allowedRoles = [
+        "STUDENT",
+        "AUTHORITY",
+        "ADMIN"
+    ];
+
+    if (!allowedRoles.includes(role)) {
+        throw new Error("INVALID_ROLE");
+    }
+
+    const [users] = await pool.execute(
+        `SELECT
+            id,
+            role
+         FROM users
+         WHERE id = ?
+         LIMIT 1`,
+        [userId]
+    );
+
+    if (users.length === 0) {
+        throw new Error("USER_NOT_FOUND");
+    }
+
+    await pool.execute(
+        `UPDATE users
+         SET role = ?
+         WHERE id = ?`,
+        [role, userId]
+    );
+
+    const [updatedUsers] = await pool.execute(
+        `SELECT
+            id,
+            name,
+            email,
+            role,
+            department_id,
+            is_active,
+            created_at,
+            updated_at
+         FROM users
+         WHERE id = ?
+         LIMIT 1`,
+        [userId]
+    );
+
+    return updatedUsers[0];
+}
+
 module.exports = {
     getAllUsers,
     updateUserStatus,
-    updateAuthorityDepartment
+    updateAuthorityDepartment,
+    updateUserRole
 };

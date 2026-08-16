@@ -30,4 +30,12 @@ router.patch(
     adminController.updateAuthorityDepartment
 );
 
+// Admin: Change user role
+router.patch(
+    "/users/:id/role",
+    authenticate,
+    authorizeRoles(ROLES.ADMIN),
+    adminController.updateUserRole
+);
+
 module.exports = router;

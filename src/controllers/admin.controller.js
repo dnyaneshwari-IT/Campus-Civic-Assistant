@@ -65,7 +65,74 @@ async function updateUserStatus(req, res) {
     }
 }
 
+async function updateAuthorityDepartment(req, res) {
+    try {
+        const userId = Number(req.params.id);
+        const { department_id } = req.body;
+
+        if (!Number.isInteger(userId) || userId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid user ID"
+            });
+        }
+
+        if (
+            !Number.isInteger(department_id) ||
+            department_id <= 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "department_id must be a valid positive integer"
+            });
+        }
+
+        const user = await adminService.updateAuthorityDepartment(
+            userId,
+            department_id
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Authority department updated successfully",
+            data: user
+        });
+    } catch (error) {
+        console.error(
+            "Update authority department error:",
+            error.message
+        );
+
+        if (error.message === "USER_NOT_FOUND") {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        if (error.message === "USER_NOT_AUTHORITY") {
+            return res.status(400).json({
+                success: false,
+                message: "User is not an authority"
+            });
+        }
+
+        if (error.message === "DEPARTMENT_NOT_FOUND") {
+            return res.status(404).json({
+                success: false,
+                message: "Department not found"
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update authority department"
+        });
+    }
+}
+
 module.exports = {
     getAllUsers,
-    updateUserStatus
+    updateUserStatus,
+    updateAuthorityDepartment
 };

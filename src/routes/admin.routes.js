@@ -22,4 +22,12 @@ router.patch(
     adminController.updateUserStatus
 );
 
+// Admin: Assign / Change authority department
+router.patch(
+    "/users/:id/department",
+    authenticate,
+    authorizeRoles(ROLES.ADMIN),
+    adminController.updateAuthorityDepartment
+);
+
 module.exports = router;

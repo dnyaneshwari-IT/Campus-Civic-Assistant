@@ -59,11 +59,13 @@ async function getIssuesByUser(userId) {
             i.title,
             i.description,
             i.reported_by,
+            reporter.name AS reported_by_name,
             i.category_id,
             c.name AS category_name,
             i.department_id,
             d.name AS department_name,
             i.assigned_to,
+            authority.name AS assigned_to_name,
             i.status,
             i.priority,
             i.location_text,
@@ -76,6 +78,10 @@ async function getIssuesByUser(userId) {
              ON i.category_id = c.id
          INNER JOIN departments d
              ON i.department_id = d.id
+         LEFT JOIN users reporter
+             ON i.reported_by = reporter.id
+         LEFT JOIN users authority
+             ON i.assigned_to = authority.id
          WHERE i.reported_by = ?
          ORDER BY i.created_at DESC`,
         [userId]
@@ -84,18 +90,25 @@ async function getIssuesByUser(userId) {
     return issues;
 }
 
-async function getIssueById(issueId, userId) {
-    const [issues] = await pool.execute(
-        `SELECT
+async function getIssueById(
+    issueId,
+    userId,
+    userRole,
+    departmentId
+) {
+    let query = `
+        SELECT
             i.id,
             i.title,
             i.description,
             i.reported_by,
+            reporter.name AS reported_by_name,
             i.category_id,
             c.name AS category_name,
             i.department_id,
             d.name AS department_name,
             i.assigned_to,
+            authority.name AS assigned_to_name,
             i.status,
             i.priority,
             i.location_text,
@@ -103,15 +116,35 @@ async function getIssueById(issueId, userId) {
             i.longitude,
             i.created_at,
             i.updated_at
-         FROM issues i
-         INNER JOIN categories c
-             ON i.category_id = c.id
-         INNER JOIN departments d
-             ON i.department_id = d.id
-         WHERE i.id = ?
-           AND i.reported_by = ?
-         LIMIT 1`,
-        [issueId, userId]
+        FROM issues i
+        INNER JOIN categories c
+            ON i.category_id = c.id
+        INNER JOIN departments d
+            ON i.department_id = d.id
+        LEFT JOIN users reporter
+            ON i.reported_by = reporter.id
+        LEFT JOIN users authority
+            ON i.assigned_to = authority.id
+        WHERE i.id = ?
+    `;
+
+    const params = [issueId];
+
+    if (userRole === "STUDENT") {
+        query += ` AND i.reported_by = ?`;
+        params.push(userId);
+    }
+
+    if (userRole === "AUTHORITY") {
+        query += ` AND i.department_id = ?`;
+        params.push(departmentId);
+    }
+
+    query += ` LIMIT 1`;
+
+    const [issues] = await pool.execute(
+        query,
+        params
     );
 
     return issues[0] || null;
@@ -124,11 +157,13 @@ async function getIssuesForAuthority(departmentId) {
             i.title,
             i.description,
             i.reported_by,
+            reporter.name AS reported_by_name,
             i.category_id,
             c.name AS category_name,
             i.department_id,
             d.name AS department_name,
             i.assigned_to,
+            authority.name AS assigned_to_name,
             i.status,
             i.priority,
             i.location_text,
@@ -141,6 +176,10 @@ async function getIssuesForAuthority(departmentId) {
              ON i.category_id = c.id
          INNER JOIN departments d
              ON i.department_id = d.id
+         LEFT JOIN users reporter
+             ON i.reported_by = reporter.id
+         LEFT JOIN users authority
+             ON i.assigned_to = authority.id
          WHERE i.department_id = ?
          ORDER BY i.created_at DESC`,
         [departmentId]
@@ -211,9 +250,15 @@ async function getAllIssuesForAdmin(status, priority) {
     return issues;
 }
 
-async function assignIssue(issueId, authorityId, departmentId) {
+async function assignIssue(
+    issueId,
+    authorityId,
+    departmentId
+) {
     const [issues] = await pool.execute(
-        `SELECT id, department_id
+        `SELECT
+            id,
+            department_id
          FROM issues
          WHERE id = ?
          LIMIT 1`,
@@ -226,7 +271,10 @@ async function assignIssue(issueId, authorityId, departmentId) {
 
     const issue = issues[0];
 
-    if (Number(issue.department_id) !== Number(departmentId)) {
+    if (
+        Number(issue.department_id) !==
+        Number(departmentId)
+    ) {
         throw new Error("DEPARTMENT_ACCESS_DENIED");
     }
 
@@ -249,11 +297,13 @@ async function assignIssue(issueId, authorityId, departmentId) {
             i.title,
             i.description,
             i.reported_by,
+            reporter.name AS reported_by_name,
             i.category_id,
             c.name AS category_name,
             i.department_id,
             d.name AS department_name,
             i.assigned_to,
+            authority.name AS assigned_to_name,
             i.status,
             i.priority,
             i.location_text,
@@ -266,6 +316,10 @@ async function assignIssue(issueId, authorityId, departmentId) {
              ON i.category_id = c.id
          INNER JOIN departments d
              ON i.department_id = d.id
+         LEFT JOIN users reporter
+             ON i.reported_by = reporter.id
+         LEFT JOIN users authority
+             ON i.assigned_to = authority.id
          WHERE i.id = ?
          LIMIT 1`,
         [issueId]
@@ -338,11 +392,13 @@ async function updateIssueStatus(
             i.title,
             i.description,
             i.reported_by,
+            reporter.name AS reported_by_name,
             i.category_id,
             c.name AS category_name,
             i.department_id,
             d.name AS department_name,
             i.assigned_to,
+            authority.name AS assigned_to_name,
             i.status,
             i.priority,
             i.location_text,
@@ -355,6 +411,10 @@ async function updateIssueStatus(
              ON i.category_id = c.id
          INNER JOIN departments d
              ON i.department_id = d.id
+         LEFT JOIN users reporter
+             ON i.reported_by = reporter.id
+         LEFT JOIN users authority
+             ON i.assigned_to = authority.id
          WHERE i.id = ?
          LIMIT 1`,
         [issueId]
@@ -420,11 +480,13 @@ async function updateIssuePriority(
             i.title,
             i.description,
             i.reported_by,
+            reporter.name AS reported_by_name,
             i.category_id,
             c.name AS category_name,
             i.department_id,
             d.name AS department_name,
             i.assigned_to,
+            authority.name AS assigned_to_name,
             i.status,
             i.priority,
             i.location_text,
@@ -437,6 +499,10 @@ async function updateIssuePriority(
              ON i.category_id = c.id
          INNER JOIN departments d
              ON i.department_id = d.id
+         LEFT JOIN users reporter
+             ON i.reported_by = reporter.id
+         LEFT JOIN users authority
+             ON i.assigned_to = authority.id
          WHERE i.id = ?
          LIMIT 1`,
         [issueId]
@@ -532,7 +598,10 @@ async function getIssueUpdates(
     const issue = issues[0];
 
     if (userRole === "STUDENT") {
-        if (Number(issue.reported_by) !== Number(userId)) {
+        if (
+            Number(issue.reported_by) !==
+            Number(userId)
+        ) {
             throw new Error("ACCESS_DENIED");
         }
     }

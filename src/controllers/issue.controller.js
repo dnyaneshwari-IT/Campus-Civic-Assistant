@@ -1,3 +1,4 @@
+
 const issueService = require("../services/issue.service");
 
 async function createIssue(req, res) {
@@ -173,6 +174,46 @@ async function getAdminIssues(req, res) {
         return res.status(500).json({
             success: false,
             message: "Failed to retrieve all issues"
+        });
+    }
+}
+
+async function getAdminIssueById(req, res) {
+    try {
+        const issueId = Number(req.params.id);
+
+        if (!Number.isInteger(issueId) || issueId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid issue ID"
+            });
+        }
+
+        const issue = await issueService.getAdminIssueById(
+            issueId
+        );
+
+        if (!issue) {
+            return res.status(404).json({
+                success: false,
+                message: "Issue not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Issue retrieved successfully",
+            data: issue
+        });
+    } catch (error) {
+        console.error(
+            "Get admin issue by ID error:",
+            error.message
+        );
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to retrieve issue"
         });
     }
 }
@@ -529,9 +570,11 @@ module.exports = {
     getIssueById,
     getAuthorityIssues,
     getAdminIssues,
+    getAdminIssueById,
     assignIssue,
     updateIssueStatus,
     updateIssuePriority,
     addIssueUpdate,
     getIssueUpdates
 };
+

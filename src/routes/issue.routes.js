@@ -1,4 +1,5 @@
 const express = require("express");
+
 const issueController = require("../controllers/issue.controller");
 const { authenticate } = require("../middleware/auth.middleware");
 const { authorizeRoles } = require("../middleware/role.middleware");
@@ -8,81 +9,84 @@ const router = express.Router();
 
 // Student: Create Issue
 router.post(
-    "/",
-    authenticate,
-    issueController.createIssue
+"/",
+authenticate,
+issueController.createIssue
 );
 
 // Admin: Get All Issues
-// Keep this BEFORE "/:id"
+// IMPORTANT: Keep this route BEFORE "/:id"
 router.get(
-    "/admin/all",
-    authenticate,
-    authorizeRoles(ROLES.ADMIN),
-    issueController.getAdminIssues
+"/admin/all",
+authenticate,
+authorizeRoles(ROLES.ADMIN),
+issueController.getAdminIssues
 );
 
 // Authority: Get Department Issues
 router.get(
-    "/authority",
-    authenticate,
-    authorizeRoles(ROLES.AUTHORITY),
-    issueController.getAuthorityIssues
+"/authority",
+authenticate,
+authorizeRoles(ROLES.AUTHORITY),
+issueController.getAuthorityIssues
 );
 
 // Student: Get My Issues
 router.get(
-    "/",
-    authenticate,
-    issueController.getMyIssues
+"/",
+authenticate,
+issueController.getMyIssues
 );
 
 // Authority: Assign Issue
 router.patch(
-    "/:id/assign",
-    authenticate,
-    authorizeRoles(ROLES.AUTHORITY),
-    issueController.assignIssue
+"/:id/assign",
+authenticate,
+authorizeRoles(ROLES.AUTHORITY),
+issueController.assignIssue
 );
 
 // Authority: Update Issue Status
 router.patch(
-    "/:id/status",
-    authenticate,
-    authorizeRoles(ROLES.AUTHORITY),
-    issueController.updateIssueStatus
+"/:id/status",
+authenticate,
+authorizeRoles(ROLES.AUTHORITY),
+issueController.updateIssueStatus
 );
 
 // Authority: Update Issue Priority
 router.patch(
-    "/:id/priority",
-    authenticate,
-    authorizeRoles(ROLES.AUTHORITY),
-    issueController.updateIssuePriority
+"/:id/priority",
+authenticate,
+authorizeRoles(ROLES.AUTHORITY),
+issueController.updateIssuePriority
 );
 
 // Authority: Add Issue Update
 router.post(
-    "/:id/updates",
-    authenticate,
-    authorizeRoles(ROLES.AUTHORITY),
-    issueController.addIssueUpdate
+"/:id/updates",
+authenticate,
+authorizeRoles(ROLES.AUTHORITY),
+issueController.addIssueUpdate
 );
 
-// Student/Authority: Get Issue Updates
+// Student / Authority: Get Issue Updates
 router.get(
-    "/:id/updates",
-    authenticate,
-    authorizeRoles(ROLES.STUDENT, ROLES.AUTHORITY),
-    issueController.getIssueUpdates
+"/:id/updates",
+authenticate,
+authorizeRoles(
+ROLES.STUDENT,
+ROLES.AUTHORITY
+),
+issueController.getIssueUpdates
 );
 
-// Student: Get My Issue By ID
-// Keep this AFTER /admin/all and /authority
+// Student: Get Issue By ID
+// IMPORTANT: Keep this AFTER "/admin/all" and "/authority"
 router.get(
-    "/:id",
-    authenticate,
-    issueController.getIssueById
+"/:id",
+authenticate,
+issueController.getIssueById
 );
 
 module.exports = router;

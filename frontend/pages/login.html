@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login | Campus Civic Assistant</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f7fb;
+
+            color: #172b4d;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+
+            background: #1f2937;
+
+            color: white;
+
+            padding: 18px 7%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .logo {
+
+            font-size: 21px;
+
+            font-weight: bold;
+        }
+
+        .home-link {
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 8px 15px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 6px;
+
+            font-weight: bold;
+        }
+
+        .home-link:hover {
+            opacity: 0.85;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+
+            min-height: calc(100vh - 76px);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 30px 20px;
+        }
+
+        /* ================= CARD ================= */
+
+        .card {
+
+            width: 100%;
+
+            max-width: 450px;
+
+            background: white;
+
+            padding: 38px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 5px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo-icon {
+
+            text-align: center;
+
+            font-size: 48px;
+
+            margin-bottom: 10px;
+        }
+
+        .card h1 {
+
+            text-align: center;
+
+            margin: 0 0 8px;
+
+            font-size: 28px;
+        }
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #64748b;
+
+            margin-bottom: 28px;
+        }
+
+        /* ================= MESSAGE ================= */
+
+        .message {
+
+            display: none;
+
+            padding: 12px;
+
+            border-radius: 7px;
+
+            margin-bottom: 18px;
+
+            font-size: 14px;
+        }
+
+        .message.success {
+
+            display: block;
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        .message.error {
+
+            display: block;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-group {
+
+            margin-bottom: 18px;
+        }
+
+        label {
+
+            display: block;
+
+            font-weight: bold;
+
+            margin-bottom: 7px;
+        }
+
+        input {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+        input:focus {
+
+            outline: none;
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        /* ================= BUTTON ================= */
+
+        .login-button {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-top: 5px;
+        }
+
+        .login-button:hover {
+
+            background: #1d4ed8;
+        }
+
+        .login-button:disabled {
+
+            opacity: 0.6;
+
+            cursor: not-allowed;
+        }
+
+        /* ================= LINKS ================= */
+
+        .links {
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        .links a {
+
+            color: #2563eb;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+        .links a:hover {
+
+            text-decoration: underline;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="logo">
+
+            🏫 Campus Civic Assistant
+
+        </div>
+
+        <a
+            href="../index.html"
+            class="home-link"
+        >
+            🏠 Home
+        </a>
+
+    </header>
+
+
+    <!-- ================= LOGIN ================= -->
+
+    <main class="container">
+
+        <div class="card">
+
+            <div class="logo-icon">
+                🔐
+            </div>
+
+            <h1>
+                Welcome Back
+            </h1>
+
+            <p class="subtitle">
+                Sign in to manage campus issues
+            </p>
+
+
+            <div
+                id="message"
+                class="message"
+            ></div>
+
+
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-button"
+                    id="loginButton"
+                >
+                    Login
+                </button>
+
+            </form>
+
+
+            <div class="links">
+
+                <p>
+
+                    Don't have an account?
+
+                    <a href="register.html">
+                        Create account
+                    </a>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================= LOGIN SCRIPT ================= -->
+
+    <script>
+
+        const API_URL =
+            "http://localhost:5000/api/v1";
+
+
+        const loginForm =
+            document.getElementById("loginForm");
+
+
+        const message =
+            document.getElementById("message");
+
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+
+        function showMessage(text, type) {
+
+            message.textContent = text;
+
+            message.className = "message " + type;
+
+        }
+
+
+        loginForm.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document
+                        .getElementById("email")
+                        .value
+                        .trim();
+
+
+                const password =
+                    document
+                        .getElementById("password")
+                        .value;
+
+
+                showMessage(
+                    "Logging in...",
+                    "success"
+                );
+
+
+                loginButton.disabled = true;
+
+                loginButton.textContent =
+                    "Logging in...";
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `${API_URL}/auth/login`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+                                    email: email,
+                                    password: password
+                                })
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (
+                        !response.ok ||
+                        data.success === false
+                    ) {
+
+                        throw new Error(
+                            data.message ||
+                            "Login failed."
+                        );
+
+                    }
+
+
+                    /*
+                     * Save the complete login response.
+                     * Existing dashboards can use these
+                     * values when required.
+                     */
+
+                    localStorage.setItem(
+                        "token",
+                        data.data.token
+                    );
+
+
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify(
+                            data.data.user
+                        )
+                    );
+
+
+                    showMessage(
+                        "Login successful. Redirecting...",
+                        "success"
+                    );
+
+
+                    const user =
+                        data.data.user;
+
+
+                    setTimeout(
+                        function() {
+
+                            if (
+                                user.role ===
+                                "ADMIN"
+                            ) {
+
+                                window.location.href =
+                                    "admin-dashboard.html";
+
+                            }
+
+                            else if (
+                                user.role ===
+                                "AUTHORITY"
+                            ) {
+
+                                window.location.href =
+                                    "authority-dashboard.html";
+
+                            }
+
+                            else {
+
+                                window.location.href =
+                                    "student-dashboard.html";
+
+                            }
+
+                        },
+                        700
+                    );
+
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Login error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to login. Please try again.",
+                        "error"
+                    );
+
+                }
+
+                finally {
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "Login";
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

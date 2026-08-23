@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Campus Civic Assistant</title>
+
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+
+    <header class="topbar">
+
+        <div>
+            <h1>Campus Civic Assistant</h1>
+            <p>Admin Dashboard</p>
+        </div>
+
+        <div class="admin-info">
+            <span id="adminName">Admin</span>
+
+            <button id="logoutButton">
+                Logout
+            </button>
+        </div>
+
+    </header>
+
+
+    <main class="container">
+
+        <!-- Statistics -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <p id="totalUsers">0</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Active Users</h3>
+                <p id="activeUsers">0</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Inactive Users</h3>
+                <p id="inactiveUsers">0</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Total Issues</h3>
+                <p id="totalIssues">0</p>
+            </div>
+
+        </section>
+
+
+        <!-- Users -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <h2>User Management</h2>
+                    <p>Manage campus users and authorities</p>
+                </div>
+
+                <button
+                    id="refreshUsersButton"
+                    class="secondary-button"
+                >
+                    Refresh
+                </button>
+
+            </div>
+
+
+            <div id="userError" class="error-message"></div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="usersTableBody">
+
+                        <tr>
+                            <td colspan="7">
+                                Loading users...
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- Issues -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <h2>All Issues</h2>
+                    <p>Overview of reported campus issues</p>
+                </div>
+
+                <button
+                    id="refreshIssuesButton"
+                    class="secondary-button"
+                >
+                    Refresh
+                </button>
+
+            </div>
+
+
+            <div id="issueError" class="error-message"></div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Reported By</th>
+                            <th>Department</th>
+                            <th>Assigned To</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="issuesTableBody">
+
+                        <tr>
+                            <td colspan="7">
+                                Loading issues...
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="../js/admin.js"></script>
+
+</body>
+</html>

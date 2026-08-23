@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard | Campus Civic Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6fa;
+            color: #172b4d;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 28px 42px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            color: #dbe4f0;
+            font-size: 16px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1450px;
+            margin: 32px auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 28px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+        }
+
+        .welcome h2 {
+            margin-top: 0;
+            font-size: 28px;
+        }
+
+        .welcome p {
+            color: #64748b;
+            font-size: 17px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+        }
+
+        .stat-card h3 {
+            margin: 0 0 18px;
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .stat-card .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .section-title {
+            margin-top: 0;
+            font-size: 27px;
+        }
+
+        .section-subtitle {
+            color: #64748b;
+            margin-top: -15px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+            background: white;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .submit-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .submit-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .refresh-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .refresh-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f1f5f9;
+            text-align: left;
+            padding: 14px 12px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .status-SUBMITTED {
+            color: #475569;
+        }
+
+        .status-ASSIGNED {
+            color: #7c3aed;
+        }
+
+        .status-IN_PROGRESS {
+            color: #2563eb;
+        }
+
+        .status-RESOLVED {
+            color: #16a34a;
+        }
+
+        .priority {
+            font-weight: bold;
+        }
+
+        .priority-LOW {
+            color: #64748b;
+        }
+
+        .priority-MEDIUM {
+            color: #2563eb;
+        }
+
+        .priority-HIGH {
+            color: #ea580c;
+        }
+
+        .priority-URGENT {
+            color: #dc2626;
+        }
+
+        .updates-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 13px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .updates-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .message {
+            padding: 12px 15px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .loading {
+            color: #64748b;
+            padding: 20px 0;
+        }
+
+        .empty {
+            color: #64748b;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .updates-container {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .update-item {
+            border-left: 4px solid #2563eb;
+            padding: 15px 18px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            border-radius: 5px;
+        }
+
+        .update-author {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .update-message {
+            margin-bottom: 8px;
+        }
+
+        .update-date {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .close-updates {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 18px;
+        }
+
+        @media (max-width: 900px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 22px;
+            }
+
+            .container {
+                width: 94%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h1>Campus Civic Assistant</h1>
+        <p>Student Dashboard</p>
+    </div>
+
+    <div class="header-right">
+        <span id="studentName">Student</span>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- Welcome -->
+    <div class="card welcome">
+        <h2>
+            Welcome, <span id="welcomeName">Student</span> 👋
+        </h2>
+
+        <p>
+            Report campus problems and track the progress of your issues.
+        </p>
+    </div>
+
+
+    <!-- Statistics -->
+    <div class="stats">
+
+        <div class="stat-card">
+            <h3>My Issues</h3>
+            <div class="number" id="totalIssues">0</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Submitted</h3>
+            <div class="number" id="submittedIssues">0</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>In Progress</h3>
+            <div class="number" id="progressIssues">0</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Resolved</h3>
+            <div class="number" id="resolvedIssues">0</div>
+        </div>
+
+    </div>
+
+
+    <!-- Report Issue -->
+    <div class="card">
+
+        <h2 class="section-title">
+            Report a Campus Issue
+        </h2>
+
+        <p class="section-subtitle">
+            Tell us about a problem on campus.
+        </p>
+
+        <div id="formMessage" class="message"></div>
+
+        <form id="issueForm">
+
+            <div class="form-group">
+                <label for="title">Issue Title</label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="Example: Water leakage near hostel"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="description">Description</label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Describe the problem..."
+                    required
+                ></textarea>
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select id="category" name="categoryId" required>
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="department">
+                        Department
+                    </label>
+
+                    <select id="department" name="departmentId" required>
+
+                        <option value="">
+                            Select department
+                        </option>
+
+                    </select>
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+                <label for="location">
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    name="locationText"
+                    placeholder="Example: Hostel Block A"
+                    required
+                >
+            </div>
+
+
+            <button
+                type="submit"
+                class="submit-btn"
+                id="submitBtn"
+            >
+                Submit Issue
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- My Issues -->
+    <div class="card">
+
+        <div class="section-header">
+
+            <div>
+                <h2>My Issues</h2>
+
+                <p class="section-subtitle">
+                    Track the issues you have reported.
+                </p>
+            </div>
+
+            <button
+                class="refresh-btn"
+                onclick="loadMyIssues()"
+            >
+                Refresh
+            </button>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Location</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="issuesTableBody">
+
+                    <tr>
+                        <td colspan="8" class="loading">
+                            Loading issues...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- Updates -->
+    <div
+        class="card updates-container"
+        id="updatesSection"
+    >
+
+        <div class="section-header">
+
+            <div>
+                <h2>Issue Updates</h2>
+
+                <p>
+                    Updates for:
+                    <strong id="updatesIssueTitle"></strong>
+                </p>
+            </div>
+
+        </div>
+
+        <button
+            class="close-updates"
+            onclick="closeUpdates()"
+        >
+            Close
+        </button>
+
+        <div id="updatesList"></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /*
+     * ============================================================
+     * CONFIGURATION
+     * ============================================================
+     */
+
+    const API_BASE_URL = "http://localhost:5000/api/v1";
+
+
+    /*
+     * ============================================================
+     * AUTHENTICATION
+     * ============================================================
+     */
+
+    function getToken() {
+
+        return (
+            localStorage.getItem("token") ||
+            localStorage.getItem("authToken") ||
+            localStorage.getItem("accessToken")
+        );
+
+    }
+
+
+    function getUser() {
+
+        try {
+
+            const user = localStorage.getItem("user");
+
+            return user
+                ? JSON.parse(user)
+                : null;
+
+        } catch (error) {
+
+            console.error("Unable to read user:", error);
+
+            return null;
+
+        }
+
+    }
+
+
+    function authHeaders() {
+
+        const token = getToken();
+
+        return {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        };
+
+    }
+
+
+    /*
+     * ============================================================
+     * PAGE INITIALIZATION
+     * ============================================================
+     */
+
+    document.addEventListener("DOMContentLoaded", async function () {
+
+        const user = getUser();
+
+        if (!user) {
+
+            alert("Please login first.");
+
+            window.location.href = "login.html";
+
+            return;
+
+        }
+
+
+        document.getElementById("studentName").textContent =
+            user.name || "Student";
+
+        document.getElementById("welcomeName").textContent =
+            user.name || "Student";
+
+
+        await loadCategories();
+
+        await loadDepartments();
+
+        await loadMyIssues();
+
+    });
+
+
+    /*
+     * ============================================================
+     * LOAD CATEGORIES
+     * ============================================================
+     */
+
+    async function loadCategories() {
+
+        const categorySelect =
+            document.getElementById("category");
+
+        try {
+
+            const response = await fetch(
+                `${API_BASE_URL}/categories`,
+                {
+                    method: "GET",
+                    headers: authHeaders()
+                }
+            );
+
+
+            const result = await response.json();
+
+            console.log("Categories:", result);
+
+
+            if (!response.ok || !result.success) {
+
+                throw new Error(
+                    result.message ||
+                    "Failed to load categories"
+                );
+
+            }
+
+
+            categorySelect.innerHTML =
+                `<option value="">Select category</option>`;
+
+
+            result.data.forEach(category => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = category.id;
+
+                option.textContent = category.name;
+
+                categorySelect.appendChild(option);
+
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "Category loading error:",
+                error
+            );
+
+            categorySelect.innerHTML =
+                `<option value="">
+                    Unable to load categories
+                </option>`;
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * LOAD DEPARTMENTS
+     * ============================================================
+     *
+     * The backend requires departmentId when creating an issue.
+     * Therefore the student selects the responsible department.
+     *
+     * If your backend endpoint uses a different URL, change only
+     * this URL:
+     *
+     *     /departments
+     *
+     * ============================================================
+     */
+
+    async function loadDepartments() {
+
+        const departmentSelect =
+            document.getElementById("department");
+
+        try {
+
+            const response = await fetch(
+                `${API_BASE_URL}/departments`,
+                {
+                    method: "GET",
+                    headers: authHeaders()
+                }
+            );
+
+
+            const result = await response.json();
+
+            console.log("Departments:", result);
+
+
+            if (!response.ok || !result.success) {
+
+                throw new Error(
+                    result.message ||
+                    "Failed to load departments"
+                );
+
+            }
+
+
+            departmentSelect.innerHTML =
+                `<option value="">
+                    Select department
+                </option>`;
+
+
+            result.data.forEach(department => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = department.id;
+
+                option.textContent = department.name;
+
+                departmentSelect.appendChild(option);
+
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "Department loading error:",
+                error
+            );
+
+
+            /*
+             * Fallback departments.
+             *
+             * These include the departments already confirmed
+             * by your project:
+             *
+             * Maintenance = 1
+             * Electrical = 2
+             */
+
+            departmentSelect.innerHTML = `
+
+                <option value="">
+                    Select department
+                </option>
+
+                <option value="1">
+                    Maintenance
+                </option>
+
+                <option value="2">
+                    Electrical
+                </option>
+
+            `;
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * LOAD MY ISSUES
+     * ============================================================
+     */
+
+    async function loadMyIssues() {
+
+        const tbody =
+            document.getElementById("issuesTableBody");
+
+        tbody.innerHTML = `
+
+            <tr>
+                <td colspan="8" class="loading">
+                    Loading issues...
+                </td>
+            </tr>
+
+        `;
+
+
+        try {
+
+            const response = await fetch(
+                `${API_BASE_URL}/issues`,
+                {
+                    method: "GET",
+                    headers: authHeaders()
+                }
+            );
+
+
+            const result = await response.json();
+
+            console.log("My Issues:", result);
+
+
+            if (!response.ok || !result.success) {
+
+                throw new Error(
+                    result.message ||
+                    "Failed to load issues"
+                );
+
+            }
+
+
+            const issues = result.data || [];
+
+
+            updateStatistics(issues);
+
+
+            if (issues.length === 0) {
+
+                tbody.innerHTML = `
+
+                    <tr>
+                        <td
+                            colspan="8"
+                            class="empty"
+                        >
+                            You have not reported any issues yet.
+                        </td>
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            tbody.innerHTML = "";
+
+
+            issues.forEach(issue => {
+
+                const row =
+                    document.createElement("tr");
+
+
+                row.innerHTML = `
+
+                    <td>
+                        ${escapeHtml(issue.id)}
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${escapeHtml(issue.title)}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            issue.category_name || "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            issue.department_name || "-"
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="status status-${escapeHtml(
+                                issue.status
+                            )}"
+                        >
+                            ${escapeHtml(issue.status)}
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="priority priority-${escapeHtml(
+                                issue.priority
+                            )}"
+                        >
+                            ${escapeHtml(issue.priority)}
+                        </span>
+
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            issue.location_text || "-"
+                        )}
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="updates-btn"
+                            onclick="loadUpdates(
+                                ${Number(issue.id)},
+                                '${escapeJs(issue.title)}'
+                            )"
+                        >
+                            Updates
+                        </button>
+
+                    </td>
+
+                `;
+
+
+                tbody.appendChild(row);
+
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "Load issues error:",
+                error
+            );
+
+
+            tbody.innerHTML = `
+
+                <tr>
+                    <td
+                        colspan="8"
+                        class="empty"
+                    >
+                        Failed to load issues.
+                        Please check that the backend is running.
+                    </td>
+                </tr>
+
+            `;
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * DASHBOARD STATISTICS
+     * ============================================================
+     */
+
+    function updateStatistics(issues) {
+
+        document.getElementById("totalIssues").textContent =
+            issues.length;
+
+
+        const submitted =
+            issues.filter(
+                issue => issue.status === "SUBMITTED"
+            ).length;
+
+
+        const progress =
+            issues.filter(
+                issue =>
+                    issue.status === "ASSIGNED" ||
+                    issue.status === "IN_PROGRESS"
+            ).length;
+
+
+        const resolved =
+            issues.filter(
+                issue => issue.status === "RESOLVED"
+            ).length;
+
+
+        document.getElementById("submittedIssues")
+            .textContent = submitted;
+
+
+        document.getElementById("progressIssues")
+            .textContent = progress;
+
+
+        document.getElementById("resolvedIssues")
+            .textContent = resolved;
+
+    }
+
+
+    /*
+     * ============================================================
+     * SUBMIT ISSUE
+     * ============================================================
+     */
+
+    document
+        .getElementById("issueForm")
+        .addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const title =
+                    document
+                        .getElementById("title")
+                        .value
+                        .trim();
+
+
+                const description =
+                    document
+                        .getElementById("description")
+                        .value
+                        .trim();
+
+
+                const categoryId =
+                    document
+                        .getElementById("category")
+                        .value;
+
+
+                const departmentId =
+                    document
+                        .getElementById("department")
+                        .value;
+
+
+                const locationText =
+                    document
+                        .getElementById("location")
+                        .value
+                        .trim();
+
+
+                const submitBtn =
+                    document.getElementById(
+                        "submitBtn"
+                    );
+
+
+                const messageBox =
+                    document.getElementById(
+                        "formMessage"
+                    );
+
+
+                messageBox.className =
+                    "message";
+
+                messageBox.textContent = "";
+
+
+                /*
+                 * Frontend validation
+                 */
+
+                if (!title) {
+
+                    showFormMessage(
+                        "Please enter an issue title.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!description) {
+
+                    showFormMessage(
+                        "Please enter a description.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!categoryId) {
+
+                    showFormMessage(
+                        "Please select a category.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!departmentId) {
+
+                    showFormMessage(
+                        "Please select a department.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!locationText) {
+
+                    showFormMessage(
+                        "Please enter the location.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                submitBtn.disabled = true;
+
+                submitBtn.textContent =
+                    "Submitting...";
+
+
+                try {
+
+                    /*
+                     * IMPORTANT:
+                     *
+                     * The backend expects:
+                     *
+                     * title
+                     * description
+                     * categoryId
+                     * departmentId
+                     * locationText
+                     */
+
+                    const payload = {
+
+                        title: title,
+
+                        description: description,
+
+                        categoryId: Number(categoryId),
+
+                        departmentId: Number(departmentId),
+
+                        locationText: locationText
+
+                    };
+
+
+                    console.log(
+                        "Submitting issue:",
+                        payload
+                    );
+
+
+                    const response =
+                        await fetch(
+                            `${API_BASE_URL}/issues`,
+                            {
+                                method: "POST",
+
+                                headers:
+                                    authHeaders(),
+
+                                body:
+                                    JSON.stringify(
+                                        payload
+                                    )
+                            }
+                        );
+
+
+                    const result =
+                        await response.json();
+
+
+                    console.log(
+                        "Create issue response:",
+                        result
+                    );
+
+
+                    if (
+                        !response.ok ||
+                        !result.success
+                    ) {
+
+                        throw new Error(
+                            result.message ||
+                            "Failed to submit issue"
+                        );
+
+                    }
+
+
+                    showFormMessage(
+                        "Issue reported successfully!",
+                        "success"
+                    );
+
+
+                    document
+                        .getElementById("issueForm")
+                        .reset();
+
+
+                    await loadMyIssues();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Submit issue error:",
+                        error
+                    );
+
+
+                    showFormMessage(
+                        error.message ||
+                        "Failed to submit issue.",
+                        "error"
+                    );
+
+                } finally {
+
+                    submitBtn.disabled = false;
+
+                    submitBtn.textContent =
+                        "Submit Issue";
+
+                }
+
+            }
+        );
+
+
+    /*
+     * ============================================================
+     * FORM MESSAGE
+     * ============================================================
+     */
+
+    function showFormMessage(
+        message,
+        type
+    ) {
+
+        const box =
+            document.getElementById(
+                "formMessage"
+            );
+
+
+        box.textContent = message;
+
+        box.className =
+            `message ${type}`;
+
+    }
+
+
+    /*
+     * ============================================================
+     * LOAD ISSUE UPDATES
+     * ============================================================
+     */
+
+    async function loadUpdates(
+        issueId,
+        issueTitle
+    ) {
+
+        const section =
+            document.getElementById(
+                "updatesSection"
+            );
+
+
+        const title =
+            document.getElementById(
+                "updatesIssueTitle"
+            );
+
+
+        const list =
+            document.getElementById(
+                "updatesList"
+            );
+
+
+        title.textContent =
+            issueTitle;
+
+
+        list.innerHTML = `
+            <p class="loading">
+                Loading updates...
+            </p>
+        `;
+
+
+        section.style.display =
+            "block";
+
+
+        section.scrollIntoView({
+            behavior: "smooth"
+        });
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/issues/${issueId}/updates`,
+                    {
+                        method: "GET",
+                        headers: authHeaders()
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "Issue updates:",
+                result
+            );
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                throw new Error(
+                    result.message ||
+                    "Failed to load updates"
+                );
+
+            }
+
+
+            const updates =
+                result.data || [];
+
+
+            if (updates.length === 0) {
+
+                list.innerHTML = `
+
+                    <div class="empty">
+                        No updates have been added yet.
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            list.innerHTML = "";
+
+
+            updates.forEach(update => {
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                item.className =
+                    "update-item";
+
+
+                const date =
+                    update.created_at
+                        ? new Date(
+                            update.created_at
+                        ).toLocaleString()
+                        : "";
+
+
+                item.innerHTML = `
+
+                    <div class="update-author">
+                        ${escapeHtml(
+                            update.updated_by_name ||
+                            "Authority"
+                        )}
+                    </div>
+
+                    <div class="update-message">
+                        ${escapeHtml(
+                            update.message
+                        )}
+                    </div>
+
+                    <div class="update-date">
+                        ${escapeHtml(date)}
+                    </div>
+
+                `;
+
+
+                list.appendChild(item);
+
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "Load updates error:",
+                error
+            );
+
+
+            list.innerHTML = `
+
+                <div class="message error">
+                    ${escapeHtml(
+                        error.message ||
+                        "Failed to load updates"
+                    )}
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * CLOSE UPDATES
+     * ============================================================
+     */
+
+    function closeUpdates() {
+
+        document.getElementById(
+            "updatesSection"
+        ).style.display = "none";
+
+    }
+
+
+    /*
+     * ============================================================
+     * LOGOUT
+     * ============================================================
+     */
+
+    function logout() {
+
+        localStorage.removeItem("token");
+
+        localStorage.removeItem("authToken");
+
+        localStorage.removeItem("accessToken");
+
+        localStorage.removeItem("user");
+
+
+        window.location.href =
+            "login.html";
+
+    }
+
+
+    /*
+     * ============================================================
+     * SECURITY / HTML ESCAPING
+     * ============================================================
+     */
+
+    function escapeHtml(value) {
+
+        if (value === null ||
+            value === undefined) {
+
+            return "";
+
+        }
+
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    function escapeJs(value) {
+
+        return String(value || "")
+            .replace(/\\/g, "\\\\")
+            .replace(/'/g, "\\'")
+            .replace(/"/g, '\\"')
+            .replace(/\n/g, "\\n")
+            .replace(/\r/g, "\\r");
+
+    }
+
+</script>
+
+</body>
+</html>

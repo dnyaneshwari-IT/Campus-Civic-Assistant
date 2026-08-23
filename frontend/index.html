@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Campus Civic Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f8fafc;
+            color: #172b4d;
+            line-height: 1.6;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            background: #1f2937;
+            color: white;
+            padding: 18px 7%;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-buttons a {
+            text-decoration: none;
+            padding: 9px 18px;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .login-btn {
+            border: 1px solid #cbd5e1;
+        }
+
+        .register-btn {
+            background: #2563eb;
+        }
+
+        .nav-buttons a:hover {
+            opacity: 0.85;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 520px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 70px 20px;
+
+            background: linear-gradient(
+                135deg,
+                #eff6ff,
+                #f8fafc
+            );
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-icon {
+            font-size: 65px;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 span {
+            color: #2563eb;
+        }
+
+        .hero p {
+            font-size: 19px;
+            color: #64748b;
+
+            max-width: 650px;
+
+            margin: 0 auto 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            text-decoration: none;
+
+            padding: 13px 25px;
+
+            border-radius: 7px;
+
+            font-weight: bold;
+        }
+
+        .primary-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .secondary-btn {
+            background: white;
+            color: #2563eb;
+
+            border: 1px solid #2563eb;
+        }
+
+        .primary-btn:hover,
+        .secondary-btn:hover {
+            opacity: 0.85;
+        }
+
+        /* ================= SECTIONS ================= */
+
+        .section {
+            padding: 70px 7%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #64748b;
+        }
+
+        /* ================= CARDS ================= */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(230px, 1fr));
+
+            gap: 22px;
+
+            max-width: 1100px;
+
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+
+            padding: 28px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.06);
+
+            text-align: center;
+        }
+
+        .card-icon {
+            font-size: 38px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        /* ================= HOW IT WORKS ================= */
+
+        .steps {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+
+            gap: 25px;
+
+            max-width: 1000px;
+
+            margin: auto;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .number {
+            width: 48px;
+            height: 48px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 50%;
+
+            background: #2563eb;
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        /* ================= ROLES ================= */
+
+        .roles {
+            background: #eff6ff;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #1f2937;
+
+            color: #cbd5e1;
+
+            text-align: center;
+
+            padding: 25px;
+        }
+
+        footer strong {
+            color: white;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                padding: 15px 20px;
+
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 17px;
+            }
+
+            .section {
+                padding: 50px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🏫 Campus Civic Assistant
+        </div>
+
+        <div class="nav-buttons">
+
+            <a
+                href="pages/login.html"
+                class="login-btn"
+            >
+                Login
+            </a>
+
+            <a
+                href="pages/register.html"
+                class="register-btn"
+            >
+                Register
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-icon">
+                🏫
+            </div>
+
+            <h1>
+                Campus <span>Civic Assistant</span>
+            </h1>
+
+            <p>
+                A simple platform for students to report campus
+                problems and track their resolution from submission
+                to completion.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a
+                    href="pages/register.html"
+                    class="primary-btn"
+                >
+                    Report a Campus Issue
+                </a>
+
+                <a
+                    href="pages/login.html"
+                    class="secondary-btn"
+                >
+                    Login
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FEATURES ================= -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>What You Can Do</h2>
+
+            <p>
+                Everything needed to manage campus issues in one place.
+            </p>
+
+        </div>
+
+
+        <div class="cards">
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📝
+                </div>
+
+                <h3>
+                    Report Issues
+                </h3>
+
+                <p>
+                    Report water, electrical, cleanliness,
+                    infrastructure, internet, safety and other
+                    campus problems.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Track Progress
+                </h3>
+
+                <p>
+                    Track your issue from submitted to in-progress
+                    and finally resolved.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🔔
+                </div>
+
+                <h3>
+                    View Updates
+                </h3>
+
+                <p>
+                    See updates from the responsible department
+                    while your issue is being handled.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🏢
+                </div>
+
+                <h3>
+                    Department Management
+                </h3>
+
+                <p>
+                    Authorities can manage issues belonging to
+                    their assigned department.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= HOW IT WORKS ================= -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                How It Works
+            </h2>
+
+            <p>
+                Reporting a campus issue takes only a few steps.
+            </p>
+
+        </div>
+
+
+        <div class="steps">
+
+            <div class="step">
+
+                <div class="number">
+                    1
+                </div>
+
+                <h3>
+                    Create Account
+                </h3>
+
+                <p>
+                    Register as a student using your name,
+                    email and department.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="number">
+                    2
+                </div>
+
+                <h3>
+                    Report Issue
+                </h3>
+
+                <p>
+                    Select the issue category, department and
+                    location and submit the problem.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="number">
+                    3
+                </div>
+
+                <h3>
+                    Authority Handles It
+                </h3>
+
+                <p>
+                    The responsible department assigns and
+                    works on the issue.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="number">
+                    4
+                </div>
+
+                <h3>
+                    Track Resolution
+                </h3>
+
+                <p>
+                    Follow the status and updates until the
+                    issue is resolved.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= ROLES ================= -->
+
+    <section class="section roles">
+
+        <div class="section-title">
+
+            <h2>
+                Built for the Campus Community
+            </h2>
+
+            <p>
+                Different dashboards for different responsibilities.
+            </p>
+
+        </div>
+
+
+        <div class="cards">
+
+            <div class="card">
+
+                <div class="card-icon">
+                    👨‍🎓
+                </div>
+
+                <h3>
+                    Students
+                </h3>
+
+                <p>
+                    Report campus problems and track your
+                    submitted issues.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🛠️
+                </div>
+
+                <h3>
+                    Authorities
+                </h3>
+
+                <p>
+                    Manage department issues, assign work,
+                    update status and communicate progress.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    👨‍💼
+                </div>
+
+                <h3>
+                    Administrators
+                </h3>
+
+                <p>
+                    Manage users and monitor issues across
+                    the entire campus.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <p>
+            <strong>
+                Campus Civic Assistant
+            </strong>
+
+            — Making campus issue management simpler.
+        </p>
+
+        <p>
+            © 2026 Campus Civic Assistant
+        </p>
+
+    </footer>
+
+</body>
+</html>

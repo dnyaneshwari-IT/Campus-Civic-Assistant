@@ -1,0 +1,340 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #172033;
+}
+
+/* Top navigation */
+
+.topbar {
+    background: #1f2937;
+    color: white;
+    padding: 22px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar h1 {
+    font-size: 26px;
+    margin-bottom: 5px;
+}
+
+.topbar p {
+    color: #cbd5e1;
+}
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-weight: bold;
+}
+
+#logoutButton {
+    border: none;
+    background: #ef4444;
+    color: white;
+    padding: 11px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#logoutButton:hover {
+    background: #dc2626;
+}
+
+/* Main container */
+
+.container {
+    width: 90%;
+    max-width: 1400px;
+    margin: 35px auto;
+}
+
+/* Welcome */
+
+.welcome-card {
+    background: white;
+    padding: 28px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.welcome-card h2 {
+    margin-bottom: 10px;
+}
+
+.welcome-card p {
+    color: #64748b;
+}
+
+/* Statistics */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card h3 {
+    color: #64748b;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.stat-card p {
+    color: #2563eb;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+/* Panels */
+
+.panel {
+    background: white;
+    padding: 28px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.panel-header h2 {
+    margin-bottom: 7px;
+}
+
+.panel-header p {
+    color: #64748b;
+}
+
+/* Forms */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+/* Buttons */
+
+.primary-button,
+.secondary-button {
+    border: none;
+    padding: 11px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.primary-button {
+    background: #2563eb;
+    color: white;
+}
+
+.primary-button:hover {
+    background: #1d4ed8;
+}
+
+.secondary-button {
+    background: #2563eb;
+    color: white;
+}
+
+.secondary-button:hover {
+    background: #1d4ed8;
+}
+
+/* Table */
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f1f5f9;
+}
+
+th,
+td {
+    padding: 15px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+    font-size: 14px;
+}
+
+td {
+    font-size: 14px;
+}
+
+tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* Status badges */
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-submitted {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.status-assigned {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-progress {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+.status-resolved {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/* Messages */
+
+.message {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.error-message {
+    color: #dc2626;
+    margin-bottom: 15px;
+}
+
+/* Updates */
+
+.update-card {
+    padding: 18px;
+    border-left: 4px solid #2563eb;
+    background: #f8fafc;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.update-card strong {
+    display: block;
+    margin-bottom: 7px;
+}
+
+.update-card p {
+    color: #475569;
+    margin-bottom: 7px;
+}
+
+.update-card small {
+    color: #94a3b8;
+}
+
+/* Mobile */
+
+@media (max-width: 900px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .topbar {
+        padding: 18px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .student-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .container {
+        width: 94%;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .panel {
+        padding: 18px;
+    }
+
+}

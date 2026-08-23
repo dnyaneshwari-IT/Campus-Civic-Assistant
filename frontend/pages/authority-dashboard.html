@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authority Dashboard | Campus Civic Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6fa;
+            color: #172b4d;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 25px 42px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 27px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            color: #cbd5e1;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .logout-btn {
+            border: none;
+            background: #ef4444;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1450px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.07);
+        }
+
+        .welcome h2 {
+            margin-top: 0;
+        }
+
+        .muted {
+            color: #64748b;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.07);
+        }
+
+        .stat h3 {
+            margin: 0 0 15px;
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .stat-number {
+            font-size: 34px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .refresh-btn,
+        .action-btn {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 9px 14px;
+            border-radius: 6px;
+        }
+
+        .refresh-btn:hover,
+        .action-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .secondary-btn {
+            border: none;
+            background: #64748b;
+            color: white;
+            padding: 9px 14px;
+            border-radius: 6px;
+        }
+
+        .danger-btn {
+            border: none;
+            background: #dc2626;
+            color: white;
+            padding: 9px 14px;
+            border-radius: 6px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f1f5f9;
+            text-align: left;
+            padding: 13px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .SUBMITTED {
+            color: #64748b;
+        }
+
+        .ASSIGNED {
+            color: #7c3aed;
+        }
+
+        .IN_PROGRESS {
+            color: #2563eb;
+        }
+
+        .RESOLVED {
+            color: #16a34a;
+        }
+
+        .LOW {
+            color: #64748b;
+            font-weight: bold;
+        }
+
+        .MEDIUM {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .HIGH {
+            color: #ea580c;
+            font-weight: bold;
+        }
+
+        .URGENT {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .message {
+            padding: 12px 15px;
+            border-radius: 7px;
+            margin-bottom: 18px;
+            display: none;
+        }
+
+        .message.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            z-index: 1000;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 28px;
+            border-radius: 12px;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .update-item {
+            background: #f8fafc;
+            border-left: 4px solid #2563eb;
+            padding: 15px;
+            margin-bottom: 13px;
+            border-radius: 5px;
+        }
+
+        .update-author {
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .update-date {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        .loading,
+        .empty {
+            text-align: center;
+            color: #64748b;
+            padding: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            header {
+                padding: 22px;
+            }
+
+            .container {
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h1>Campus Civic Assistant</h1>
+        <p>Authority Dashboard</p>
+    </div>
+
+    <div class="header-right">
+        <span id="authorityName">Authority</span>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+
+<div class="container">
+
+    <!-- Welcome -->
+    <div class="card welcome">
+        <h2>
+            Welcome,
+            <span id="welcomeName">Authority</span>
+            👋
+        </h2>
+
+        <p class="muted">
+            Manage and resolve issues assigned to your department.
+        </p>
+
+        <p>
+            <strong>Department:</strong>
+            <span id="departmentName">Loading...</span>
+        </p>
+    </div>
+
+
+    <!-- Statistics -->
+    <div class="stats">
+
+        <div class="stat">
+            <h3>Department Issues</h3>
+            <div
+                class="stat-number"
+                id="totalIssues"
+            >
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <h3>Submitted</h3>
+            <div
+                class="stat-number"
+                id="submittedIssues"
+            >
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <h3>In Progress</h3>
+            <div
+                class="stat-number"
+                id="progressIssues"
+            >
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <h3>Resolved</h3>
+            <div
+                class="stat-number"
+                id="resolvedIssues"
+            >
+                0
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Issues -->
+    <div class="card">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Department Issues</h2>
+
+                <p class="muted">
+                    Issues reported to your department.
+                </p>
+            </div>
+
+            <button
+                class="refresh-btn"
+                onclick="loadIssues()"
+            >
+                Refresh
+            </button>
+
+        </div>
+
+
+        <div
+            id="pageMessage"
+            class="message"
+        ></div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Reported By</th>
+                        <th>Category</th>
+                        <th>Assigned To</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="issuesBody">
+
+                    <tr>
+                        <td
+                            colspan="9"
+                            class="loading"
+                        >
+                            Loading issues...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Action Modal -->
+<div
+    class="modal"
+    id="actionModal"
+>
+
+    <div class="modal-content">
+
+        <h2 id="modalTitle">
+            Update Issue
+        </h2>
+
+        <div
+            id="modalMessage"
+            class="message"
+        ></div>
+
+
+        <!-- Assign -->
+        <div
+            id="assignForm"
+            style="display:none;"
+        >
+
+            <div class="form-group">
+
+                <label for="assignedTo">
+                    Authority User ID
+                </label>
+
+                <input
+                    type="number"
+                    id="assignedTo"
+                    placeholder="Example: 2"
+                >
+
+                <p class="muted">
+                    Enter the ID of the authority who should
+                    handle this issue.
+                </p>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    class="action-btn"
+                    onclick="submitAssign()"
+                >
+                    Assign Issue
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Status -->
+        <div
+            id="statusForm"
+            style="display:none;"
+        >
+
+            <div class="form-group">
+
+                <label for="statusSelect">
+                    Status
+                </label>
+
+                <select id="statusSelect">
+
+                    <option value="ASSIGNED">
+                        ASSIGNED
+                    </option>
+
+                    <option value="IN_PROGRESS">
+                        IN_PROGRESS
+                    </option>
+
+                    <option value="RESOLVED">
+                        RESOLVED
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    class="action-btn"
+                    onclick="submitStatus()"
+                >
+                    Update Status
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Priority -->
+        <div
+            id="priorityForm"
+            style="display:none;"
+        >
+
+            <div class="form-group">
+
+                <label for="prioritySelect">
+                    Priority
+                </label>
+
+                <select id="prioritySelect">
+
+                    <option value="LOW">
+                        LOW
+                    </option>
+
+                    <option value="MEDIUM">
+                        MEDIUM
+                    </option>
+
+                    <option value="HIGH">
+                        HIGH
+                    </option>
+
+                    <option value="URGENT">
+                        URGENT
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    class="action-btn"
+                    onclick="submitPriority()"
+                >
+                    Update Priority
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Add Update -->
+        <div
+            id="updateForm"
+            style="display:none;"
+        >
+
+            <div class="form-group">
+
+                <label for="updateMessage">
+                    Update Message
+                </label>
+
+                <textarea
+                    id="updateMessage"
+                    placeholder="Example: Plumber has been assigned to inspect the issue."
+                ></textarea>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    class="action-btn"
+                    onclick="submitUpdate()"
+                >
+                    Add Update
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Updates Modal -->
+<div
+    class="modal"
+    id="updatesModal"
+>
+
+    <div class="modal-content">
+
+        <h2>
+            Issue Updates
+        </h2>
+
+        <p>
+            <strong>Issue:</strong>
+            <span id="updatesIssueTitle"></span>
+        </p>
+
+        <div id="updatesList">
+            Loading...
+        </div>
+
+        <div class="modal-actions">
+
+            <button
+                class="secondary-btn"
+                onclick="closeUpdatesModal()"
+            >
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /*
+     * ============================================================
+     * CONFIG
+     * ============================================================
+     */
+
+    const API_BASE_URL =
+        "http://localhost:5000/api/v1";
+
+
+    let selectedIssueId = null;
+
+
+    /*
+     * ============================================================
+     * AUTH
+     * ============================================================
+     */
+
+    function getToken() {
+
+        return (
+            localStorage.getItem("token") ||
+            localStorage.getItem("authToken") ||
+            localStorage.getItem("accessToken")
+        );
+
+    }
+
+
+    function getUser() {
+
+        try {
+
+            const value =
+                localStorage.getItem("user");
+
+            return value
+                ? JSON.parse(value)
+                : null;
+
+        } catch (error) {
+
+            console.error(
+                "User parsing error:",
+                error
+            );
+
+            return null;
+
+        }
+
+    }
+
+
+    function authHeaders() {
+
+        return {
+
+            "Content-Type":
+                "application/json",
+
+            "Authorization":
+                `Bearer ${getToken()}`
+
+        };
+
+    }
+
+
+    /*
+     * ============================================================
+     * INITIALIZE
+     * ============================================================
+     */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async function () {
+
+            const user = getUser();
+
+
+            if (!user) {
+
+                alert(
+                    "Please login first."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            if (
+                user.role &&
+                user.role !== "AUTHORITY"
+            ) {
+
+                alert(
+                    "Only authorities can access this dashboard."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "authorityName"
+            ).textContent =
+                user.name || "Authority";
+
+
+            document.getElementById(
+                "welcomeName"
+            ).textContent =
+                user.name || "Authority";
+
+
+            document.getElementById(
+                "departmentName"
+            ).textContent =
+                user.departmentId
+                    ? `Department ID ${user.departmentId}`
+                    : "Not assigned";
+
+
+            await loadIssues();
+
+        }
+    );
+
+
+    /*
+     * ============================================================
+     * LOAD AUTHORITY ISSUES
+     * ============================================================
+     */
+
+    async function loadIssues() {
+
+        const body =
+            document.getElementById(
+                "issuesBody"
+            );
+
+
+        body.innerHTML = `
+
+            <tr>
+                <td
+                    colspan="9"
+                    class="loading"
+                >
+                    Loading department issues...
+                </td>
+            </tr>
+
+        `;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/issues/authority`,
+                    {
+                        method: "GET",
+                        headers: authHeaders()
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "Authority issues:",
+                result
+            );
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                throw new Error(
+                    result.message ||
+                    "Failed to load issues"
+                );
+
+            }
+
+
+            const issues =
+                result.data || [];
+
+
+            updateStatistics(
+                issues
+            );
+
+
+            if (
+                issues.length === 0
+            ) {
+
+                body.innerHTML = `
+
+                    <tr>
+                        <td
+                            colspan="9"
+                            class="empty"
+                        >
+                            No issues found for your department.
+                        </td>
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            body.innerHTML = "";
+
+
+            issues.forEach(
+                issue => {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+
+                        <td>
+                            ${escapeHtml(
+                                issue.id
+                            )}
+                        </td>
+
+                        <td>
+                            <strong>
+                                ${escapeHtml(
+                                    issue.title
+                                )}
+                            </strong>
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                issue.reported_by_name ||
+                                issue.reported_by ||
+                                "-"
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                issue.category_name ||
+                                "-"
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                issue.assigned_to_name ||
+                                "-"
+                            )}
+                        </td>
+
+                        <td>
+                            <span
+                                class="status ${escapeHtml(
+                                    issue.status
+                                )}"
+                            >
+                                ${escapeHtml(
+                                    issue.status
+                                )}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span
+                                class="${escapeHtml(
+                                    issue.priority
+                                )}"
+                            >
+                                ${escapeHtml(
+                                    issue.priority
+                                )}
+                            </span>
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                issue.location_text ||
+                                "-"
+                            )}
+                        </td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <button
+                                    class="action-btn"
+                                    onclick="openAssignModal(
+                                        ${Number(issue.id)}
+                                    )"
+                                >
+                                    Assign
+                                </button>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="openStatusModal(
+                                        ${Number(issue.id)},
+                                        '${escapeJs(issue.status)}'
+                                    )"
+                                >
+                                    Status
+                                </button>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="openPriorityModal(
+                                        ${Number(issue.id)},
+                                        '${escapeJs(issue.priority)}'
+                                    )"
+                                >
+                                    Priority
+                                </button>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="openUpdateModal(
+                                        ${Number(issue.id)}
+                                    )"
+                                >
+                                    Add Update
+                                </button>
+
+                                <button
+                                    class="secondary-btn"
+                                    onclick="loadUpdates(
+                                        ${Number(issue.id)},
+                                        '${escapeJs(issue.title)}'
+                                    )"
+                                >
+                                    Updates
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    `;
+
+
+                    body.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Load authority issues error:",
+                error
+            );
+
+
+            body.innerHTML = `
+
+                <tr>
+                    <td
+                        colspan="9"
+                        class="empty"
+                    >
+                        ${escapeHtml(
+                            error.message ||
+                            "Failed to load issues."
+                        )}
+                    </td>
+                </tr>
+
+            `;
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * STATISTICS
+     * ============================================================
+     */
+
+    function updateStatistics(
+        issues
+    ) {
+
+        document.getElementById(
+            "totalIssues"
+        ).textContent =
+            issues.length;
+
+
+        document.getElementById(
+            "submittedIssues"
+        ).textContent =
+            issues.filter(
+                issue =>
+                    issue.status ===
+                    "SUBMITTED"
+            ).length;
+
+
+        document.getElementById(
+            "progressIssues"
+        ).textContent =
+            issues.filter(
+                issue =>
+                    issue.status ===
+                        "ASSIGNED" ||
+                    issue.status ===
+                        "IN_PROGRESS"
+            ).length;
+
+
+        document.getElementById(
+            "resolvedIssues"
+        ).textContent =
+            issues.filter(
+                issue =>
+                    issue.status ===
+                    "RESOLVED"
+            ).length;
+
+    }
+
+
+    /*
+     * ============================================================
+     * MODAL HELPERS
+     * ============================================================
+     */
+
+    function hideForms() {
+
+        document.getElementById(
+            "assignForm"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "statusForm"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "priorityForm"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "updateForm"
+        ).style.display = "none";
+
+    }
+
+
+    function clearModalMessage() {
+
+        const box =
+            document.getElementById(
+                "modalMessage"
+            );
+
+
+        box.className =
+            "message";
+
+        box.textContent = "";
+
+    }
+
+
+    function openModal() {
+
+        document.getElementById(
+            "actionModal"
+        ).style.display = "block";
+
+    }
+
+
+    function closeModal() {
+
+        document.getElementById(
+            "actionModal"
+        ).style.display = "none";
+
+
+        selectedIssueId = null;
+
+        hideForms();
+
+        clearModalMessage();
+
+    }
+
+
+    /*
+     * ============================================================
+     * ASSIGN
+     * ============================================================
+     */
+
+    function openAssignModal(
+        issueId
+    ) {
+
+        selectedIssueId =
+            issueId;
+
+
+        hideForms();
+
+        clearModalMessage();
+
+
+        document.getElementById(
+            "modalTitle"
+        ).textContent =
+            `Assign Issue #${issueId}`;
+
+
+        document.getElementById(
+            "assignedTo"
+        ).value = "";
+
+
+        document.getElementById(
+            "assignForm"
+        ).style.display = "block";
+
+
+        openModal();
+
+    }
+
+
+    async function submitAssign() {
+
+        const assignedTo =
+            document.getElementById(
+                "assignedTo"
+            ).value;
+
+
+        if (!assignedTo) {
+
+            showModalMessage(
+                "Please enter an authority user ID.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/issues/${selectedIssueId}/assign`,
+                    {
+                        method: "PATCH",
+
+                        headers:
+                            authHeaders(),
+
+                        body:
+                            JSON.stringify({
+                                assignedTo:
+                                    Number(
+                                        assignedTo
+                                    )
+                            })
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "Assign response:",
+                result
+            );
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                throw new Error(
+                    result.message ||
+                    "Failed to assign issue"
+                );
+
+            }
+
+
+            closeModal();
+
+            showPageMessage(
+                "Issue assigned successfully.",
+                "success"
+            );
+
+
+            await loadIssues();
+
+
+        } catch (error) {
+
+            console.error(
+                "Assign error:",
+                error
+            );
+
+
+            showModalMessage(
+                error.message ||
+                "Failed to assign issue.",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * STATUS
+     * ============================================================
+     */
+
+    function openStatusModal(
+        issueId,
+        currentStatus
+    ) {
+
+        selectedIssueId =
+            issueId;
+
+
+        hideForms();
+
+        clearModalMessage();
+
+
+        document.getElementById(
+            "modalTitle"
+        ).textContent =
+            `Update Status #${issueId}`;
+
+
+        document.getElementById(
+            "statusSelect"
+        ).value =
+            currentStatus === "SUBMITTED"
+                ? "ASSIGNED"
+                : currentStatus;
+
+
+        document.getElementById(
+            "statusForm"
+        ).style.display =
+            "block";
+
+
+        openModal();
+
+    }
+
+
+    async function submitStatus() {
+
+        const status =
+            document.getElementById(
+                "statusSelect"
+            ).value;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/issues/${selectedIssueId}/status`,
+                    {
+                        method: "PATCH",
+
+                        headers:
+                            authHeaders(),
+
+                        body:
+                            JSON.stringify({
+                                status:
+                                    status
+                            })
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "Status response:",
+                result
+            );
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                throw new Error(
+                    result.message ||
+                    "Failed to update status"
+                );
+
+            }
+
+
+            closeModal();
+
+            showPageMessage(
+                "Issue status updated successfully.",
+                "success"
+            );
+
+
+            await loadIssues();
+
+
+        } catch (error) {
+
+            console.error(
+                "Status error:",
+                error
+            );
+
+
+            showModalMessage(
+                error.message ||
+                "Failed to update status.",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * PRIORITY
+     * ============================================================
+     */
+
+    function openPriorityModal(
+        issueId,
+        currentPriority
+    ) {
+
+        selectedIssueId =
+            issueId;
+
+
+        hideForms();
+
+        clearModalMessage();
+
+
+        document.getElementById(
+            "modalTitle"
+        ).textContent =
+            `Update Priority #${issueId}`;
+
+
+        document.getElementById(
+            "prioritySelect"
+        ).value =
+            currentPriority || "MEDIUM";
+
+
+        document.getElementById(
+            "priorityForm"
+        ).style.display =
+            "block";
+
+
+        openModal();
+
+    }
+
+
+    async function submitPriority() {
+
+        const priority =
+            document.getElementById(
+                "prioritySelect"
+            ).value;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/issues/${selectedIssueId}/priority`,
+                    {
+                        method: "PATCH",
+
+                        headers:
+                            authHeaders(),
+
+                        body:
+                            JSON.stringify({
+                                priority:
+                                    priority
+                            })
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "Priority response:",
+                result
+            );
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                throw new Error(
+                    result.message ||
+                    "Failed to update priority"
+                );
+
+            }
+
+
+            closeModal();
+
+            showPageMessage(
+                "Issue priority updated successfully.",
+                "success"
+            );
+
+
+            await loadIssues();
+
+
+        } catch (error) {
+
+            console.error(
+                "Priority error:",
+                error
+            );
+
+
+            showModalMessage(
+                error.message ||
+                "Failed to update priority.",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * ADD UPDATE
+     * ============================================================
+     */
+
+    function openUpdateModal(
+        issueId
+    ) {
+
+        selectedIssueId =
+            issueId;
+
+
+        hideForms();
+
+        clearModalMessage();
+
+
+        document.getElementById(
+            "modalTitle"
+        ).textContent =
+            `Add Update #${issueId}`;
+
+
+        document.getElementById(
+            "updateMessage"
+        ).value = "";
+
+
+        document.getElementById(
+            "updateForm"
+        ).style.display =
+            "block";
+
+
+        openModal();
+
+    }
+
+
+    async function submitUpdate() {
+
+        const message =
+            document.getElementById(
+                "updateMessage"
+            ).value.trim();
+
+
+        if (!message) {
+
+            showModalMessage(
+                "Please enter an update message.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/issues/${selectedIssueId}/updates`,
+                    {
+                        method: "POST",
+
+                        headers:
+                            authHeaders(),
+
+                        body:
+                            JSON.stringify({
+                                message:
+                                    message
+                            })
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "Update response:",
+                result
+            );
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                throw new Error(
+                    result.message ||
+                    "Failed to add update"
+                );
+
+            }
+
+
+            closeModal();
+
+            showPageMessage(
+                "Issue update added successfully.",
+                "success"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Add update error:",
+                error
+            );
+
+
+            showModalMessage(
+                error.message ||
+                "Failed to add update.",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * VIEW UPDATES
+     * ============================================================
+     */
+
+    async function loadUpdates(
+        issueId,
+        issueTitle
+    ) {
+
+        document.getElementById(
+            "updatesIssueTitle"
+        ).textContent =
+            issueTitle;
+
+
+        document.getElementById(
+            "updatesModal"
+        ).style.display =
+            "block";
+
+
+        const list =
+            document.getElementById(
+                "updatesList"
+            );
+
+
+        list.innerHTML = `
+            <p class="loading">
+                Loading updates...
+            </p>
+        `;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/issues/${issueId}/updates`,
+                    {
+                        method: "GET",
+                        headers: authHeaders()
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "Updates:",
+                result
+            );
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                throw new Error(
+                    result.message ||
+                    "Failed to load updates"
+                );
+
+            }
+
+
+            const updates =
+                result.data || [];
+
+
+            if (
+                updates.length === 0
+            ) {
+
+                list.innerHTML = `
+
+                    <div class="empty">
+                        No updates have been added yet.
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            list.innerHTML = "";
+
+
+            updates.forEach(
+                update => {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "update-item";
+
+
+                    const date =
+                        update.created_at
+                            ? new Date(
+                                update.created_at
+                            ).toLocaleString()
+                            : "";
+
+
+                    item.innerHTML = `
+
+                        <div class="update-author">
+                            ${escapeHtml(
+                                update.updated_by_name ||
+                                "Authority"
+                            )}
+                        </div>
+
+                        <div>
+                            ${escapeHtml(
+                                update.message
+                            )}
+                        </div>
+
+                        <div class="update-date">
+                            ${escapeHtml(
+                                date
+                            )}
+                        </div>
+
+                    `;
+
+
+                    list.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Updates error:",
+                error
+            );
+
+
+            list.innerHTML = `
+
+                <div class="message error">
+                    ${escapeHtml(
+                        error.message ||
+                        "Failed to load updates."
+                    )}
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    function closeUpdatesModal() {
+
+        document.getElementById(
+            "updatesModal"
+        ).style.display =
+            "none";
+
+    }
+
+
+    /*
+     * ============================================================
+     * MESSAGES
+     * ============================================================
+     */
+
+    function showModalMessage(
+        message,
+        type
+    ) {
+
+        const box =
+            document.getElementById(
+                "modalMessage"
+            );
+
+
+        box.textContent =
+            message;
+
+
+        box.className =
+            `message ${type}`;
+
+    }
+
+
+    function showPageMessage(
+        message,
+        type
+    ) {
+
+        const box =
+            document.getElementById(
+                "pageMessage"
+            );
+
+
+        box.textContent =
+            message;
+
+
+        box.className =
+            `message ${type}`;
+
+
+        setTimeout(
+            () => {
+
+                box.className =
+                    "message";
+
+                box.textContent = "";
+
+            },
+            4000
+        );
+
+    }
+
+
+    /*
+     * ============================================================
+     * LOGOUT
+     * ============================================================
+     */
+
+    function logout() {
+
+        localStorage.removeItem(
+            "token"
+        );
+
+        localStorage.removeItem(
+            "authToken"
+        );
+
+        localStorage.removeItem(
+            "accessToken"
+        );
+
+        localStorage.removeItem(
+            "user"
+        );
+
+
+        window.location.href =
+            "login.html";
+
+    }
+
+
+    /*
+     * ============================================================
+     * SECURITY HELPERS
+     * ============================================================
+     */
+
+    function escapeHtml(
+        value
+    ) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+            return "";
+        }
+
+
+        return String(value)
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    function escapeJs(
+        value
+    ) {
+
+        return String(
+            value || ""
+        )
+        .replace(
+            /\\/g,
+            "\\\\"
+        )
+        .replace(
+            /'/g,
+            "\\'"
+        )
+        .replace(
+            /"/g,
+            '\\"'
+        )
+        .replace(
+            /\n/g,
+            "\\n"
+        )
+        .replace(
+            /\r/g,
+            "\\r"
+        );
+
+    }
+
+
+    /*
+     * Close modal when clicking outside it.
+     */
+
+    window.addEventListener(
+        "click",
+        function (event) {
+
+            const actionModal =
+                document.getElementById(
+                    "actionModal"
+                );
+
+            const updatesModal =
+                document.getElementById(
+                    "updatesModal"
+                );
+
+
+            if (
+                event.target ===
+                actionModal
+            ) {
+                closeModal();
+            }
+
+
+            if (
+                event.target ===
+                updatesModal
+            ) {
+                closeUpdatesModal();
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+
+
+</html>

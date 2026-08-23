@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Register | Campus Civic Assistant</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f7fb;
+
+            color: #172b4d;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+
+            background: #1f2937;
+
+            color: white;
+
+            padding: 18px 7%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .logo {
+
+            font-size: 21px;
+
+            font-weight: bold;
+        }
+
+        .home-link {
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 8px 15px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 6px;
+
+            font-weight: bold;
+        }
+
+        .home-link:hover {
+            opacity: 0.85;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+
+            min-height: calc(100vh - 76px);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 35px 20px;
+        }
+
+        /* ================= CARD ================= */
+
+        .card {
+
+            width: 100%;
+
+            max-width: 500px;
+
+            background: white;
+
+            padding: 38px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 5px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo-icon {
+
+            text-align: center;
+
+            font-size: 48px;
+
+            margin-bottom: 10px;
+        }
+
+        .card h1 {
+
+            text-align: center;
+
+            margin: 0 0 8px;
+
+            font-size: 28px;
+        }
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #64748b;
+
+            margin-bottom: 28px;
+        }
+
+        /* ================= MESSAGE ================= */
+
+        .message {
+
+            display: none;
+
+            padding: 12px;
+
+            border-radius: 7px;
+
+            margin-bottom: 18px;
+
+            font-size: 14px;
+        }
+
+        .message.success {
+
+            display: block;
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        .message.error {
+
+            display: block;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-group {
+
+            margin-bottom: 18px;
+        }
+
+        label {
+
+            display: block;
+
+            font-weight: bold;
+
+            margin-bottom: 7px;
+        }
+
+        input,
+        select {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+
+            outline: none;
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        .help-text {
+
+            margin-top: 5px;
+
+            color: #64748b;
+
+            font-size: 12px;
+        }
+
+        /* ================= BUTTON ================= */
+
+        .register-button {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-top: 5px;
+        }
+
+        .register-button:hover {
+
+            background: #1d4ed8;
+        }
+
+        .register-button:disabled {
+
+            opacity: 0.6;
+
+            cursor: not-allowed;
+        }
+
+        /* ================= LOGIN LINK ================= */
+
+        .links {
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        .links a {
+
+            color: #2563eb;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+        .links a:hover {
+
+            text-decoration: underline;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="logo">
+
+            🏫 Campus Civic Assistant
+
+        </div>
+
+        <a
+            href="../index.html"
+            class="home-link"
+        >
+            🏠 Home
+        </a>
+
+    </header>
+
+
+    <!-- ================= REGISTRATION ================= -->
+
+    <main class="container">
+
+        <div class="card">
+
+            <div class="logo-icon">
+                📝
+            </div>
+
+            <h1>
+                Create Account
+            </h1>
+
+            <p class="subtitle">
+                Register as a student to report and
+                track campus issues.
+            </p>
+
+
+            <div
+                id="message"
+                class="message"
+            ></div>
+
+
+            <form id="registerForm">
+
+                <!-- NAME -->
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter password"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <div class="help-text">
+                        Password must contain at least 6 characters.
+                    </div>
+
+                </div>
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="Confirm password"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- DEPARTMENT -->
+
+                <div class="form-group">
+
+                    <label for="departmentId">
+                        Department
+                    </label>
+
+                    <select
+                        id="departmentId"
+                        name="departmentId"
+                        required
+                    >
+
+                        <option value="">
+                            Select department
+                        </option>
+
+                        <option value="1">
+                            Maintenance
+                        </option>
+
+                        <option value="2">
+                            Electrical
+                        </option>
+
+                        <option value="3">
+                            IT Support
+                        </option>
+
+                        <option value="4">
+                            Security
+                        </option>
+
+                        <option value="5">
+                            Housekeeping
+                        </option>
+
+                        <option value="6">
+                            Administration
+                        </option>
+
+                    </select>
+
+                    <div class="help-text">
+                        Select your campus department.
+                    </div>
+
+                </div>
+
+
+                <!-- ROLE -->
+
+                <!--
+                    Students are the only users who can
+                    self-register through this public page.
+                    The role is intentionally fixed.
+                -->
+
+                <input
+                    type="hidden"
+                    id="role"
+                    value="STUDENT"
+                >
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="register-button"
+                    id="registerButton"
+                >
+                    Create Account
+                </button>
+
+            </form>
+
+
+            <!-- LOGIN -->
+
+            <div class="links">
+
+                <p>
+
+                    Already have an account?
+
+                    <a href="login.html">
+                        Login here
+                    </a>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================= REGISTRATION SCRIPT ================= -->
+
+    <script>
+
+        const API_URL =
+            "http://localhost:5000/api/v1";
+
+
+        const registerForm =
+            document.getElementById(
+                "registerForm"
+            );
+
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        const registerButton =
+            document.getElementById(
+                "registerButton"
+            );
+
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.textContent =
+                text;
+
+            message.className =
+                "message " + type;
+
+        }
+
+
+        registerForm.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                const name =
+                    document
+                        .getElementById("name")
+                        .value
+                        .trim();
+
+
+                const email =
+                    document
+                        .getElementById("email")
+                        .value
+                        .trim();
+
+
+                const password =
+                    document
+                        .getElementById("password")
+                        .value;
+
+
+                const confirmPassword =
+                    document
+                        .getElementById(
+                            "confirmPassword"
+                        )
+                        .value;
+
+
+                const departmentId =
+                    document
+                        .getElementById(
+                            "departmentId"
+                        )
+                        .value;
+
+
+                /* ================= VALIDATION ================= */
+
+                if (
+                    password !==
+                    confirmPassword
+                ) {
+
+                    showMessage(
+                        "Passwords do not match.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    password.length < 6
+                ) {
+
+                    showMessage(
+                        "Password must contain at least 6 characters.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                if (!departmentId) {
+
+                    showMessage(
+                        "Please select your department.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                /* ================= SUBMIT ================= */
+
+                registerButton.disabled =
+                    true;
+
+                registerButton.textContent =
+                    "Creating Account...";
+
+
+                showMessage(
+                    "Creating your account...",
+                    "success"
+                );
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `${API_URL}/auth/register`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        name:
+                                            name,
+
+                                        email:
+                                            email,
+
+                                        password:
+                                            password,
+
+                                        role:
+                                            "STUDENT",
+
+                                        departmentId:
+                                            Number(
+                                                departmentId
+                                            )
+
+                                    })
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (
+                        !response.ok ||
+                        data.success === false
+                    ) {
+
+                        throw new Error(
+                            data.message ||
+                            "Registration failed."
+                        );
+
+                    }
+
+
+                    showMessage(
+                        "Registration successful! Redirecting to login...",
+                        "success"
+                    );
+
+
+                    registerForm.reset();
+
+
+                    setTimeout(
+                        function() {
+
+                            window.location.href =
+                                "login.html";
+
+                        },
+                        1200
+                    );
+
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Registration error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to register. Please try again.",
+                        "error"
+                    );
+
+                }
+
+                finally {
+
+                    registerButton.disabled =
+                        false;
+
+                    registerButton.textContent =
+                        "Create Account";
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>
